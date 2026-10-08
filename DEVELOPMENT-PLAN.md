@@ -1,14 +1,13 @@
 # Incremental rebuild of pathcase-audit
 
 Deadline: 18 November 2026 (Asia/Kolkata).
-Daily session: 10:00 AM India time, via the chat heartbeat build-pathcase-audit-daily.
+Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusive, via heartbeat build-pathcase-audit-daily. Target 6–7 substantive commits per day, normally two per session; no empty or artificial commits. Assignment deadline remains 18 November.
 
 ## Current state — 9 October
 
 Planning only. No implementation copied into this fresh repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
-GitHub reset status: BLOCKED, NOT DELETED. `gh repo delete divytandon511-stack/pathcase-audit --yes` returned HTTP 403 because the credential lacks delete_repo scope. Do not push this new history to the existing repository or repeatedly retry without an access change.
-User can authorize locally with `gh auth refresh -h github.com -s delete_repo`; never request tokens in chat. Once deletion succeeds, record RESET COMPLETE here, recreate the public repository, and push the new history. Never delete it again on later runs.
+GitHub reset status: RESET COMPLETE. On 9 October the credential was verified to have delete_repo and workflow scopes. The old repository was deleted successfully and its absence verified with GitHub API HTTP 404. Recreate the public repository under the same name from this fresh history; do not delete it again on scheduled runs.
 
 ## Purpose and acceptance criteria
 
@@ -18,18 +17,26 @@ Assignment: purpose, project structure, public GitHub repository, package.json, 
 
 ## Milestones
 
-- 9–18 October: write the comparison/input contract, build minimal package structure, implement proposed-path API incrementally with meaningful tests.
-- 19–28 October: directory traversal, symlinks/ignores/errors, CLI arguments, readable and JSON output, exit codes.
-- 29 October–7 November: edge-case review, case-sensitive filesystem tests, TypeScript declarations, installation examples and documentation.
-- 8–15 November: package contents, fresh consumer install, supported Node/platform checks, release candidate, npm authentication/publication when available.
-- 16–18 November: fix remaining defects, verify public repository and npm installation, final rubric audit and accurate LinkedIn draft.
+- 9 October: comparison contract and project foundation.
+- 10 October: proposed-path API and component grouping.
+- 11 October: validation, deterministic reports and TypeScript declarations.
+- 12 October: scanner, symlinks, ignored directories and errors.
+- 13 October: CLI arguments, readable/JSON reports and exit codes.
+- 14 October: integration tests, documentation and fresh consumer installation.
+- 15 October: release verification, exact rubric audit and publication if credentials permit.
+
+Adapt tasks to actual progress. Spread substantive work over seven days; each date is a target rather than a claim of completion. Stop scheduled development after 15 October and report remaining blockers; do not automatically extend to November.
 
 ## Session rules
 
-Read current code, Git status and this log before changes. Complete one useful bounded improvement, run relevant checks and commit with the real date. Do not manufacture history, backdate commits, add empty commits or split completed prototype code across days to simulate work. Do not rebuild the whole package in a single session. If no meaningful change is needed, skip the commit. Preserve user changes. Record actual results and blockers. Do not post to LinkedIn.
+Read current code, Git status and this log before changes. Aim for two useful bounded improvements per session, each with relevant checks and a commit with the real date. A seventh daily commit is appropriate only for additional substantive work. Do not manufacture history, backdate commits, add empty commits or split completed prototype code across days to simulate work. Do not rebuild the whole package in a single session. If no meaningful change is needed, skip the commit. Preserve user changes. Record actual results and blockers. Do not post to LinkedIn.
 
-GitHub commits/pushes and eventual publication are authorized. Remote operations still depend on credentials. npm authentication and GitHub workflow scope were unavailable during the prototype. Final release must be verified rather than assumed. Stop after 18 November.
+GitHub commits/pushes and eventual publication are authorized. Remote operations still depend on credentials. npm authentication was unavailable during the prototype. GitHub workflow permission is now available. Final release must be verified rather than assumed. Stop scheduled work after 15 October.
 
 ## Progress
 
 - 9 October: established fresh development plan and local repository; daily schedule created. Remote deletion blocked on permission. No package functionality is claimed for the rebuild yet.
+
+- Schedule revised at user request: three daily sessions for seven days, targeting 6–7 meaningful commits daily. No implementation added during this scheduling change.
+
+- 9 October: deletion permission verified, old public repository deleted and absence verified. Fresh planning history prepared for publication; implementation remains scheduled.
