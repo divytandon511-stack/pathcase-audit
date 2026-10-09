@@ -48,3 +48,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 9 October, manual afternoon session: added Node ESM package foundation, MIT license, lockfile, internal ASCII folding and relative-path parser. Eight tests passed, zero skips; syntax check passed on Node v25.6.0. Public API/scanner/CLI remain unimplemented. Two substantive catch-up commits completed; next work is reserved for the 8 PM IST session.
 
 - 9 October, 8 PM scheduled session: added internal manifest validation with input-index errors, exact duplicate removal and sparse-array rejection. Twelve tests and syntax checks passed locally. This prepares the input boundary for tomorrow's collision API; no collision detection is claimed yet. Included the user's saved preference for short, factual commit messages.
+
+- 9 October, 8 PM scheduled session: added GitHub Actions checks for Node 22/24 on Linux, macOS and Windows, with read-only permissions and a ten-minute job limit. Local checks pass; remote matrix results will be verified after pushing. Tomorrow: implement collision grouping and the proposed-path API using the validated manifest boundary.

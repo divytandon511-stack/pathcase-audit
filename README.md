@@ -30,3 +30,7 @@ The current twelve tests cover the internal path grammar, manifest validation an
 ## Contributing
 
 Read the comparison contract before changing behavior. Include a focused regression test with fixes, run the commands above, and distinguish implemented behavior from planned features in documentation. MIT licensed; see LICENSE.
+
+## Automated checks
+
+GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This currently checks the parser foundation, not the planned disk scanner or CLI. The workflow has read-only repository permissions and does not publish packages.
