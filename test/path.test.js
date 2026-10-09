@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { foldAscii, parseRelativePath } from '../src/path.js';
+import { foldAscii, parseRelativePath, parsePathList } from '../src/path.js';
 
 test('folds the entire ASCII alphabet while preserving digits and punctuation', () => {
   assert.equal(foldAscii('ABCDEFGHIJKLMNOPQRSTUVWXYZ-09_.'), 'abcdefghijklmnopqrstuvwxyz-09_.');
@@ -47,4 +47,33 @@ test('separator aliases preserve distinct originals but produce identical compon
   assert.notEqual(slash.original, backslash.original);
   assert.deepEqual(slash.components, backslash.components);
   assert.deepEqual(slash.foldedComponents, backslash.foldedComponents);
+});
+
+
+test('accepts an empty proposed manifest and rejects non-array containers', () => {
+  assert.deepEqual(parsePathList([]), []);
+  for (const value of [null, undefined, 'file', {}, new Set(['file'])]) {
+    assert.throws(() => parsePathList(value), TypeError);
+  }
+});
+
+test('deduplicates exact inputs without losing separator aliases or changing input', () => {
+  const paths = Object.freeze(['Docs/a', 'Docs/a', 'Docs\\a', 'docs/a']);
+  assert.deepEqual(parsePathList(paths).map((p) => p.original), ['Docs/a', 'Docs\\a', 'docs/a']);
+  assert.deepEqual(paths, ['Docs/a', 'Docs/a', 'Docs\\a', 'docs/a']);
+});
+
+test('identifies the invalid manifest position and preserves the underlying error', () => {
+  assert.throws(() => parsePathList(['ok', 'also/ok', '../bad']), (error) => {
+    assert.ok(error instanceof TypeError);
+    assert.match(error.message, /index 2/);
+    assert.ok(error.cause instanceof TypeError);
+    return true;
+  });
+});
+
+test('rejects sparse manifests instead of silently skipping missing paths', () => {
+  const paths = new Array(2);
+  paths[0] = 'valid';
+  assert.throws(() => parsePathList(paths), /index 1/);
 });

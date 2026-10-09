@@ -25,7 +25,7 @@ npm run check
 npm test
 ```
 
-The current eight tests cover the internal path grammar and ASCII comparison helper. They do not yet verify a complete collision checker. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before its public API is ready.
+The current twelve tests cover the internal path grammar, manifest validation and ASCII comparison helper. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. They do not yet verify a complete collision checker. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before its public API is ready.
 
 ## Contributing
 

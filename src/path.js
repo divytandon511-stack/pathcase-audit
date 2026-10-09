@@ -24,3 +24,23 @@ export function parseRelativePath(value) {
     foldedComponents: components.map(foldAscii),
   };
 }
+
+/** Validate a whole proposed manifest, reporting which input needs fixing. */
+export function parsePathList(paths) {
+  if (!Array.isArray(paths)) throw new TypeError('Paths must be an array of relative strings.');
+  const parsed = [];
+  const seen = new Set();
+  for (let index = 0; index < paths.length; index++) {
+    let path;
+    try {
+      path = parseRelativePath(paths[index]);
+    } catch (error) {
+      throw new TypeError(`Invalid path at index ${index}: ${error.message}`, { cause: error });
+    }
+    if (!seen.has(path.original)) {
+      seen.add(path.original);
+      parsed.push(path);
+    }
+  }
+  return parsed;
+}
