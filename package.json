@@ -1,0 +1,17 @@
+{
+  "name": "pathcase-audit",
+  "version": "0.1.0-dev.0",
+  "private": true,
+  "description": "Detect ASCII case collisions in proposed paths and directory trees (under development).",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/path.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divytandon511-stack/pathcase-audit.git"
+  },
+  "license": "MIT"
+}

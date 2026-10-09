@@ -5,7 +5,7 @@ Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusiv
 
 ## Current state — 9 October
 
-Comparison contract and reader-facing project overview are now defined. No completed prototype implementation has been copied into this repository.
+Comparison contract, project overview and tested internal path parsing foundation are now implemented. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
 GitHub reset status: RESET COMPLETE. On 9 October the credential was verified to have delete_repo and workflow scopes. The old repository was deleted successfully and its absence verified with GitHub API HTTP 404. The fresh public repository was created and its planning history verified; do not delete it again on scheduled runs.
 
@@ -42,3 +42,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 9 October: deletion permission verified, old public repository deleted and absence verified. Fresh planning history prepared for publication; implementation remains scheduled.
 
 - 9 October, manual catch-up for the missed 3 PM session: wrote the comparison/input contract, collision acceptance table, planned scan semantics and honest project overview. Reviewed the cases against the assignment; no executable functionality is claimed by this documentation commit. Scheduler timezone corrected separately; next nominal session remains 8 PM IST.
+
+- 9 October, manual afternoon session: added Node ESM package foundation, MIT license, lockfile, internal ASCII folding and relative-path parser. Eight tests passed, zero skips; syntax check passed on Node v25.6.0. Public API/scanner/CLI remain unimplemented. Two substantive catch-up commits completed; next work is reserved for the 8 PM IST session.
