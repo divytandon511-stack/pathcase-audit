@@ -29,6 +29,8 @@ Adapt tasks to actual progress. Spread substantive work over seven days; each da
 
 ## Session rules
 
+Use short, plain-English commit messages that describe the actual change, for example "Add path validation" or "Fix directory scanning". Avoid inflated wording and boilerplate. Preserve accurate authorship and timestamps.
+
 Read current code, Git status and this log before changes. Aim for two useful bounded improvements per session, each with relevant checks and a commit with the real date. A seventh daily commit is appropriate only for additional substantive work. Do not manufacture history, backdate commits, add empty commits or split completed prototype code across days to simulate work. Do not rebuild the whole package in a single session. If no meaningful change is needed, skip the commit. Preserve user changes. Record actual results and blockers. Do not post to LinkedIn.
 
 GitHub commits/pushes and eventual publication are authorized. Remote operations still depend on credentials. npm authentication was unavailable during the prototype. GitHub workflow permission is now available. Final release must be verified rather than assumed. Stop scheduled work after 15 October.
@@ -44,3 +46,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 9 October, manual catch-up for the missed 3 PM session: wrote the comparison/input contract, collision acceptance table, planned scan semantics and honest project overview. Reviewed the cases against the assignment; no executable functionality is claimed by this documentation commit. Scheduler timezone corrected separately; next nominal session remains 8 PM IST.
 
 - 9 October, manual afternoon session: added Node ESM package foundation, MIT license, lockfile, internal ASCII folding and relative-path parser. Eight tests passed, zero skips; syntax check passed on Node v25.6.0. Public API/scanner/CLI remain unimplemented. Two substantive catch-up commits completed; next work is reserved for the 8 PM IST session.
+
+- 9 October, 8 PM scheduled session: added internal manifest validation with input-index errors, exact duplicate removal and sparse-array rejection. Twelve tests and syntax checks passed locally. This prepares the input boundary for tomorrow's collision API; no collision detection is claimed yet. Included the user's saved preference for short, factual commit messages.
