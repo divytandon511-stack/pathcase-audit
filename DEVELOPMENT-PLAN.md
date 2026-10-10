@@ -3,9 +3,9 @@
 Deadline: 18 November 2026 (Asia/Kolkata).
 Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusive, via heartbeat build-pathcase-audit-daily. Target 6–7 substantive commits per day, normally two per session; no empty or artificial commits. Assignment deadline remains 18 November.
 
-## Current state — 9 October
+## Current state — 10 October
 
-Comparison contract, project overview and tested internal path parsing foundation are now implemented. No completed prototype implementation has been copied into this repository.
+The proposed-path API, component grouping, validation, examples and cross-platform CI are implemented. Thirty tests include an independent generated-case comparison. Scanner, CLI, declarations and publication remain pending. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
 GitHub reset status: RESET COMPLETE. On 9 October the credential was verified to have delete_repo and workflow scopes. The old repository was deleted successfully and its absence verified with GitHub API HTTP 404. The fresh public repository was created and its planning history verified; do not delete it again on scheduled runs.
 
@@ -62,3 +62,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 10 October, afternoon: added a JSON import-manifest example that checks destinations before any writes and exits 1 for the sample parent collision. Added process-level tests proving both examples work outside the repository working directory. All 29 tests and syntax checks passed locally. Morning CI also passed all six Node/OS jobs. Scanner and CLI remain scheduled for later days.
 
 - 10 October, evening: added an independent pairwise reference checker and 300 reproducible generated manifests, checking both collision keys and full-report invariance under reversal. All 30 tests passed. No production bug was found. DevRelay tools were unavailable; a direct DEV search was used for developer experience context, not as the correctness oracle.
+
+- 10 October, evening: added an API reference explaining every result field, nested reports, safe manual resolution, synchronous errors and clean-result limits. Executed both guide examples against the current API. All 30 tests pass; afternoon CI had passed all six jobs. Two commits completed this session; six substantive commits total on 10 October. Tomorrow: stronger validation/report guarantees and TypeScript declarations.

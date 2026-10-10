@@ -8,6 +8,7 @@ A Node.js utility in development for detecting ASCII case collisions in proposed
 
 This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner and CLI are not ready. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
 
+- [API guide](docs/api.md): parameters, return fields, errors and interpreting nested reports.
 - [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
 - [Development plan](DEVELOPMENT-PLAN.md): milestones and actual progress.
 
@@ -25,7 +26,7 @@ npm run check
 npm test
 ```
 
-The current 29 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 30 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
