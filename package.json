@@ -9,11 +9,14 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/path.js && node --check src/collisions.js"
+    "check": "node --check src/path.js && node --check src/collisions.js && node --check src/index.js",
+    "example": "node examples/proposed-paths.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/divytandon511-stack/pathcase-audit.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": "./src/index.js",
+  "exports": "./src/index.js"
 }

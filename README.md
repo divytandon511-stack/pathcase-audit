@@ -6,7 +6,7 @@ A Node.js utility in development for detecting ASCII case collisions in proposed
 
 ## Current status
 
-This repository is being rebuilt incrementally. The comparison contract and internal path parser are implemented and tested; the public collision API, scanner and CLI are not ready. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
+This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner and CLI are not ready. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
 
 - [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
 - [Development plan](DEVELOPMENT-PLAN.md): milestones and actual progress.
@@ -25,7 +25,7 @@ npm run check
 npm test
 ```
 
-The current twelve tests cover the internal path grammar, manifest validation and ASCII comparison helper. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. They do not yet verify a complete collision checker. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before its public API is ready.
+The current 22 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -33,4 +33,20 @@ Read the comparison contract before changing behavior. Include a focused regress
 
 ## Automated checks
 
-GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This currently checks the parser foundation, not the planned disk scanner or CLI. The workflow has read-only repository permissions and does not publish packages.
+GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This currently checks the proposed-path API and its helpers, not the planned disk scanner or CLI. The workflow has read-only repository permissions and does not publish packages.
+
+## Check proposed paths
+
+From this clone, run `npm run example`, or use the development API:
+
+```js
+import { checkPaths } from 'pathcase-audit';
+
+const result = checkPaths(['Docs/Guide.md', 'docs/Guide.md']);
+console.log(result.hasCollisions); // true
+console.log(result.collisions[0].variants); // ['Docs', 'docs']
+```
+
+`checkPaths(paths)` takes an array of relative strings and returns `{ hasCollisions, collisions }` synchronously. It does not access disk. Each collision has a folded prefix `key`, zero-based `componentIndex`, original `variants`, contributing original `paths`, and a `reason`. Groups, variants and paths use locale-independent code-unit ordering. An empty list returns `{ hasCollisions: false, collisions: [] }`.
+
+Invalid inputs throw `TypeError`; an invalid entry's message includes its zero-based index. Both slash styles are separators. Exact duplicates are ignored, while all input strings contributing to a case conflict retain their spelling. See the [contract](docs/path-contract.md) for the complete grammar and comparison limitations. This development API is available from the clone; npm installation by name is not available yet.

@@ -1,6 +1,6 @@
 # Path comparison contract
 
-Status: design contract for the incremental rebuild. The public collision API and CLI are not implemented yet.
+Status: the proposed-path API implements this comparison contract. Directory scanning and CLI behavior below remain planned.
 
 ## Problem and scope
 
@@ -33,7 +33,7 @@ Index each component by its ASCII-folded full prefix. Report a group only if it 
 | `a/b`, `a\b` | none |
 | `file`, `file/child` | none; structural type conflicts are outside scope |
 
-The planned `checkPaths(paths)` result is `{ hasCollisions, collisions }`. Each collision contains `key`, `componentIndex`, `variants`, `paths`, and `reason`. Sort keys, variants and original paths with locale-independent JavaScript code-unit ordering. A single input may participate in multiple groups. Invalid proposed inputs throw TypeError and never return partial results.
+The `checkPaths(paths)` result is `{ hasCollisions, collisions }`. Each collision contains `key`, `componentIndex`, `variants`, `paths`, and `reason`. Sort keys, variants and original paths with locale-independent JavaScript code-unit ordering. A single input may participate in multiple groups. Invalid proposed inputs throw TypeError and never return partial results.
 
 ## Existing directory scans (planned)
 
