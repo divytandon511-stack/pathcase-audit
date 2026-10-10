@@ -52,3 +52,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 9 October, 8 PM scheduled session: added GitHub Actions checks for Node 22/24 on Linux, macOS and Windows, with read-only permissions and a ten-minute job limit. Local checks pass; remote matrix results will be verified after pushing. Tomorrow: implement collision grouping and the proposed-path API using the validated manifest boundary.
 
 - CI follow-up: the first remote run flagged deprecated Node 20 action runtimes. Verified the latest official checkout/setup-node releases through GitHub and updated the workflow to v7.0.1/v7.1.0. This additional commit fixes an observed CI warning; it does not add package scope.
+
+- 10 October, morning: implemented internal component grouping using complete folded prefixes. Added parent, leaf, nested, unrelated-directory, duplicate and stable-order regression cases. All 18 tests and syntax checks passed locally. Previous evening CI passed all six Node/OS jobs. The public entry point follows as the second task of this session.
