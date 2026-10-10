@@ -1,0 +1,5 @@
+[
+  { "source": "upload-001", "destination": "Docs/Guide.md" },
+  { "source": "upload-002", "destination": "docs/Setup.md" },
+  { "source": "upload-003", "destination": "assets/logo.svg" }
+]

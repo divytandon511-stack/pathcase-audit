@@ -25,7 +25,7 @@ npm run check
 npm test
 ```
 
-The current 22 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 29 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -50,3 +50,15 @@ console.log(result.collisions[0].variants); // ['Docs', 'docs']
 `checkPaths(paths)` takes an array of relative strings and returns `{ hasCollisions, collisions }` synchronously. It does not access disk. Each collision has a folded prefix `key`, zero-based `componentIndex`, original `variants`, contributing original `paths`, and a `reason`. Groups, variants and paths use locale-independent code-unit ordering. An empty list returns `{ hasCollisions: false, collisions: [] }`.
 
 Invalid inputs throw `TypeError`; an invalid entry's message includes its zero-based index. Both slash styles are separators. Exact duplicates are ignored, while all input strings contributing to a case conflict retain their spelling. See the [contract](docs/path-contract.md) for the complete grammar and comparison limitations. This development API is available from the clone; npm installation by name is not available yet.
+
+## Check an import before writing files
+
+The manifest example reads `examples/import-manifest.json` and checks each entry's `destination`. Source IDs are metadata for the hypothetical importer; the checker only needs destination paths.
+
+```sh
+npm run example:import
+```
+
+This example intentionally returns **exit code 1** because `Docs/Guide.md` and `docs/Setup.md` conflict at their parent directory. Its JSON report names both paths; `assets/logo.svg` is unrelated and is not included. No proposed files or directories are created, so it works even on a case-insensitive disk.
+
+In your own import pipeline, call `checkPaths(manifest.map(entry => entry.destination))` before any writes and stop if `hasCollisions` is true. A clean report means only that no ASCII case collision was found; your importer must still validate other destination restrictions and its own manifest schema. The example is a small API integration, not the planned directory-scanning CLI.

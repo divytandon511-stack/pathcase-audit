@@ -10,7 +10,8 @@
   "scripts": {
     "test": "node --test",
     "check": "node --check src/path.js && node --check src/collisions.js && node --check src/index.js",
-    "example": "node examples/proposed-paths.js"
+    "example": "node examples/proposed-paths.js",
+    "example:import": "node examples/check-import.js"
   },
   "repository": {
     "type": "git",
