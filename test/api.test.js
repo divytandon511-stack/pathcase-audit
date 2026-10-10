@@ -32,3 +32,35 @@ test('results and input are independent across calls', () => {
   assert.deepEqual(second.collisions[0].variants, ['A', 'a']);
   assert.deepEqual(input, ['A', 'a']);
 });
+
+test('keeps separator aliases as evidence without counting them as new variants', () => {
+  const paths = ['Docs/a', 'Docs\\a', 'docs/b', 'Docs/a'];
+  const result = checkPaths(paths);
+  assert.equal(result.collisions.length, 1);
+  assert.deepEqual(result.collisions[0].variants, ['Docs', 'docs']);
+  assert.deepEqual(result.collisions[0].paths, ['Docs/a', 'Docs\\a', 'docs/b']);
+});
+
+test('three spellings produce one group rather than three pairwise reports', () => {
+  const result = checkPaths(['lib/README', 'lib/Readme', 'lib/readme']);
+  assert.equal(result.collisions.length, 1);
+  assert.deepEqual(result.collisions[0].variants, ['README', 'Readme', 'readme']);
+  assert.equal(result.collisions[0].componentIndex, 1);
+});
+
+test('explicit directory inputs and descendants share the parent report', () => {
+  const result = checkPaths(['Docs', 'Docs/a', 'docs/b', 'other/Docs/c']);
+  assert.equal(result.collisions.length, 1);
+  assert.deepEqual(result.collisions[0].paths, ['Docs', 'Docs/a', 'docs/b']);
+});
+
+test('prototype-like names remain ordinary path components', () => {
+  const result = checkPaths(['__proto__/A', '__proto__/a', 'constructor/B', 'constructor/b']);
+  assert.deepEqual(result.collisions.map((c) => c.key), ['__proto__/a', 'constructor/b']);
+});
+
+test('non-ASCII parent names stay separate even when their ASCII children match', () => {
+  assert.deepEqual(checkPaths(['Ä/A', 'ä/a', 'é/X', 'e\u0301/x']), {
+    hasCollisions: false, collisions: [],
+  });
+});
