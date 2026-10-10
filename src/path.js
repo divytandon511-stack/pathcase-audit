@@ -1,4 +1,4 @@
-/** Internal helpers. The public collision API will be added separately. */
+/** Internal path helpers used by the public collision API. */
 
 /** Fold only ASCII uppercase letters; never apply locale or Unicode folding. */
 export function foldAscii(value) {
