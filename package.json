@@ -4,10 +4,12 @@
   "private": true,
   "description": "Detect ASCII case collisions in proposed paths and directory trees (under development).",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/path.js"
+    "check": "node --check src/path.js && node --check src/collisions.js"
   },
   "repository": {
     "type": "git",
