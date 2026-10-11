@@ -77,3 +77,12 @@ test('rejects sparse manifests instead of silently skipping missing paths', () =
   paths[0] = 'valid';
   assert.throws(() => parsePathList(paths), /index 1/);
 });
+
+test('rejects array holes even when the prototype supplies a path', () => {
+  const paths = ['valid'];
+  paths.length = 2;
+  const inherited = Object.create(Array.prototype);
+  inherited[1] = 'inherited/path';
+  Object.setPrototypeOf(paths, inherited);
+  assert.throws(() => parsePathList(paths), /index 1/);
+});

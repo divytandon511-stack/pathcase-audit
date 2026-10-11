@@ -10,7 +10,7 @@ Version 1 will compare ASCII case only: A–Z becomes a–z; every other charact
 
 ## Proposed path grammar
 
-- Accept an array of relative path strings. The empty array is valid.
+- Accept an array of relative path strings. The empty array is valid. Sparse arrays are rejected, even when an inherited numeric property supplies a value for a missing entry.
 - Both `/` and `\` separate components on every host, including mixed separators.
 - Reject nonstrings, empty strings, NUL, leading separators, and a leading drive prefix such as `C:`.
 - Reject empty components, repeated or trailing separators, `.` and `..`. Do not silently resolve or normalize them.

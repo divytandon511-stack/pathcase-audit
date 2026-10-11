@@ -33,6 +33,7 @@ export function parsePathList(paths) {
   for (let index = 0; index < paths.length; index++) {
     let path;
     try {
+      if (!Object.hasOwn(paths, index)) throw new TypeError('Missing path entry.');
       path = parseRelativePath(paths[index]);
     } catch (error) {
       throw new TypeError(`Invalid path at index ${index}: ${error.message}`, { cause: error });
