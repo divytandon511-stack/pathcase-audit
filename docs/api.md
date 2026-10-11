@@ -78,3 +78,11 @@ for (const collision of result.collisions) {
 ```
 
 Types describe strings, not whether a string is a valid relative path. Invalid path syntax still throws at runtime. The declarations do not promise an unimplemented scanner or CLI, and internal helpers are not public exports.
+
+## Serialization and larger manifests
+
+Reports contain plain JSON-compatible data. `JSON.stringify(report)` preserves original names when paired with `JSON.parse`, including quotes, tabs and newlines. JSON escaping is useful for logging names; raw paths may contain terminal control characters and should not be printed unescaped into a terminal or inserted unescaped into HTML.
+
+Ordering does not depend on the process locale. Duplicate input strings and input order do not change the serialized report. This is useful when comparing results between CI runs.
+
+The checker keeps parsed paths and prefix metadata in memory. It gathers original-path evidence only for conflicting prefixes, which avoids path sets for clean prefixes. Conflicting manifests require a second traversal, and very large reports can still be large. This API is not streaming and does not promise constant memory or a fixed maximum input size.
