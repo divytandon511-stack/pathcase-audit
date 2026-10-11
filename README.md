@@ -24,6 +24,7 @@ cd pathcase-audit
 npm ci
 npm run check
 npm test
+npm run test:types
 ```
 
 The current 30 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
@@ -63,3 +64,7 @@ npm run example:import
 This example intentionally returns **exit code 1** because `Docs/Guide.md` and `docs/Setup.md` conflict at their parent directory. Its JSON report names both paths; `assets/logo.svg` is unrelated and is not included. No proposed files or directories are created, so it works even on a case-insensitive disk.
 
 In your own import pipeline, call `checkPaths(manifest.map(entry => entry.destination))` before any writes and stop if `hasCollisions` is true. A clean report means only that no ASCII case collision was found; your importer must still validate other destination restrictions and its own manifest schema. The example is a small API integration, not the planned directory-scanning CLI.
+
+## Type checks
+
+TypeScript declarations are included for the proposed-path API. `npm run test:types` checks package-name imports under both NodeNext and Bundler module resolution, including readonly inputs, result fields, rejected invalid calls and blocked internal imports. These checks also run in CI. TypeScript is a pinned development dependency only; the runtime API still has zero dependencies. See the [TypeScript usage example](docs/api.md#typescript).
