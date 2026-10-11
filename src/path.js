@@ -1,11 +1,19 @@
-/** Internal path helpers used by the public collision API. */
+/** Internal path helpers used by the public collision API.
+ * @typedef {{original: string, components: string[], foldedComponents: string[]}} ParsedPath
+ */
 
-/** Fold only ASCII uppercase letters; never apply locale or Unicode folding. */
+/** Fold only ASCII uppercase letters; never apply locale or Unicode folding.
+ * @param {string} value
+ * @returns {string}
+ */
 export function foldAscii(value) {
   return value.replace(/[A-Z]/g, (letter) => String.fromCharCode(letter.charCodeAt(0) + 32));
 }
 
-/** Parse without normalization, retaining the original string for later reports. */
+/** Parse without normalization, retaining the original string for later reports.
+ * @param {unknown} value
+ * @returns {ParsedPath}
+ */
 export function parseRelativePath(value) {
   if (typeof value !== 'string') throw new TypeError('Path must be a string.');
   if (value.length === 0 || value.includes('\0')) {
@@ -25,7 +33,10 @@ export function parseRelativePath(value) {
   };
 }
 
-/** Validate a whole proposed manifest, reporting which input needs fixing. */
+/** Validate a whole proposed manifest, reporting which input needs fixing.
+ * @param {unknown} paths
+ * @returns {ParsedPath[]}
+ */
 export function parsePathList(paths) {
   if (!Array.isArray(paths)) throw new TypeError('Paths must be an array of relative strings.');
   const parsed = [];
@@ -36,7 +47,7 @@ export function parsePathList(paths) {
       if (!Object.hasOwn(paths, index)) throw new TypeError('Missing path entry.');
       path = parseRelativePath(paths[index]);
     } catch (error) {
-      throw new TypeError(`Invalid path at index ${index}: ${error.message}`, { cause: error });
+      throw new TypeError(`Invalid path at index ${index}: ${error instanceof Error ? error.message : 'Could not read path.'}`, { cause: error });
     }
     if (!seen.has(path.original)) {
       seen.add(path.original);

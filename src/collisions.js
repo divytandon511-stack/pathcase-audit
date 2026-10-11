@@ -1,8 +1,13 @@
 // Use code-unit ordering so reports do not depend on the host locale.
+/** @param {string} left @param {string} right */
 const compare = (left, right) => left < right ? -1 : left > right ? 1 : 0;
 
-/** Group validated paths by their complete folded prefix, including parents. */
+/** Group validated paths by their complete folded prefix, including parents.
+ * @param {import('./path.js').ParsedPath[]} paths
+ * @returns {import('./index.d.ts').Collision[]}
+ */
 export function findCollisions(paths) {
+  /** @type {Map<string, {componentIndex: number, variants: Set<string>, paths?: Set<string>}>} */
   const prefixes = new Map();
   for (const path of paths) {
     let key = '';
@@ -26,7 +31,7 @@ export function findCollisions(paths) {
     let key = '';
     for (let index = 0; index < path.components.length; index++) {
       key += `${index === 0 ? '' : '/'}${path.foldedComponents[index]}`;
-      prefixes.get(key)?.paths.add(path.original);
+      prefixes.get(key)?.paths?.add(path.original);
     }
   }
   return [...prefixes]
@@ -35,7 +40,8 @@ export function findCollisions(paths) {
       key,
       componentIndex: group.componentIndex,
       variants: [...group.variants].sort(compare),
-      paths: [...group.paths].sort(compare),
+      // Every surviving prefix received its evidence Set before the second pass.
+      paths: [.../** @type {Set<string>} */ (group.paths)].sort(compare),
       reason: 'Distinct component spellings are equal under ASCII case-insensitive comparison.',
     }));
 }

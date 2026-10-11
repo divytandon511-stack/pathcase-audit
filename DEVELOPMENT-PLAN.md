@@ -3,9 +3,9 @@
 Deadline: 18 November 2026 (Asia/Kolkata).
 Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusive, via heartbeat build-pathcase-audit-daily. Target 6–7 substantive commits per day, normally two per session; no empty or artificial commits. Assignment deadline remains 18 November.
 
-## Current state — 10 October
+## Current state — 11 October
 
-The proposed-path API, component grouping, validation, examples and cross-platform CI are implemented. Thirty tests include an independent generated-case comparison. Scanner, CLI, declarations and publication remain pending. No completed prototype implementation has been copied into this repository.
+The proposed-path API, component grouping, validation, examples and cross-platform CI are implemented. Thirty-six runtime tests include an independent generated-case comparison. TypeScript declarations, consumer type checks and JavaScript source checks are implemented. Scanner, CLI and publication remain pending. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
 GitHub reset status: RESET COMPLETE. On 9 October the credential was verified to have delete_repo and workflow scopes. The old repository was deleted successfully and its absence verified with GitHub API HTTP 404. The fresh public repository was created and its planning history verified; do not delete it again on scheduled runs.
 
@@ -74,3 +74,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 11 October, afternoon: added JSON round-trip tests for control characters and emoji, stable serialization with duplicates/permutations, and subprocess checks under three locale settings. Documented report serialization and memory limits. All 35 runtime tests, both strict type checks and syntax checks passed locally. Two substantive commits completed; scanner/CLI remain pending for later milestones.
 
 - 11 October, evening: reproduced a validation gap where a sparse array inherited a numeric path from its prototype and was accepted. Added an own-entry check and regression test without changing global prototypes. All 36 runtime tests passed after the fix. The documented sparse-array rule now holds for inherited values too.
+
+- 11 October, evening: added JSDoc source checking against the public result declarations and enabled it in CI, complementing consumer type tests. Confirmed the checker rejects an intentional result-type mismatch, then restored the correct source. All 36 runtime tests, consumer type checks and source/syntax checks passed. Six substantive commits completed on 11 October; tomorrow begins scanner work.

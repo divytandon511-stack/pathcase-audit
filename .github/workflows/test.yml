@@ -22,5 +22,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run check:source
       - run: npm test
       - run: npm run test:types

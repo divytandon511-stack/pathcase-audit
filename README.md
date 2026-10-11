@@ -23,11 +23,12 @@ git clone https://github.com/divytandon511-stack/pathcase-audit.git
 cd pathcase-audit
 npm ci
 npm run check
+npm run check:source
 npm test
 npm run test:types
 ```
 
-The current 35 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 36 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -68,3 +69,5 @@ In your own import pipeline, call `checkPaths(manifest.map(entry => entry.destin
 ## Type checks
 
 TypeScript declarations are included for the proposed-path API. `npm run test:types` checks package-name imports under both NodeNext and Bundler module resolution, including readonly inputs, result fields, rejected invalid calls and blocked internal imports. These checks also run in CI. TypeScript is a pinned development dependency only; the runtime API still has zero dependencies. See the [TypeScript usage example](docs/api.md#typescript).
+
+`npm run check:source` also checks the actual JavaScript with JSDoc annotations against the exported result types, without generating files or requiring a build. It complements consumer type tests and runtime tests; it does not replace either. This check runs in every CI matrix job.
