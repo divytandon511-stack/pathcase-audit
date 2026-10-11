@@ -64,3 +64,17 @@ test('non-ASCII parent names stay separate even when their ASCII children match'
     hasCollisions: false, collisions: [],
   });
 });
+
+test('a late parent conflict retains evidence from earlier clean-looking paths', () => {
+  const paths = Array.from({ length: 2000 }, (_, i) => `Docs/section${i}/file.txt`);
+  paths.push('docs/last.txt', 'unrelated/file.txt');
+  const result = checkPaths(paths);
+  assert.equal(result.collisions.length, 1);
+  assert.equal(result.collisions[0].paths.length, 2001);
+  assert.deepEqual(result.collisions[0].paths, paths.slice(0, -1).sort());
+});
+
+test('large unrelated namespaces remain clean', () => {
+  const paths = Array.from({ length: 2000 }, (_, i) => `dir${i}/nested/README`);
+  assert.deepEqual(checkPaths(paths), { hasCollisions: false, collisions: [] });
+});

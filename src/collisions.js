@@ -10,15 +10,26 @@ export function findCollisions(paths) {
       key += `${index === 0 ? '' : '/'}${path.foldedComponents[index]}`;
       let group = prefixes.get(key);
       if (!group) {
-        group = { componentIndex: index, variants: new Set(), paths: new Set() };
+        group = { componentIndex: index, variants: new Set() };
         prefixes.set(key, group);
       }
       group.variants.add(path.components[index]);
-      group.paths.add(path.original);
+    }
+  }
+  // Clean prefixes need no original-path sets. Collect evidence only for conflicts.
+  for (const [key, group] of prefixes) {
+    if (group.variants.size < 2) prefixes.delete(key);
+    else group.paths = new Set();
+  }
+  if (prefixes.size === 0) return [];
+  for (const path of paths) {
+    let key = '';
+    for (let index = 0; index < path.components.length; index++) {
+      key += `${index === 0 ? '' : '/'}${path.foldedComponents[index]}`;
+      prefixes.get(key)?.paths.add(path.original);
     }
   }
   return [...prefixes]
-    .filter(([, group]) => group.variants.size > 1)
     .sort(([left], [right]) => compare(left, right))
     .map(([key, group]) => ({
       key,
