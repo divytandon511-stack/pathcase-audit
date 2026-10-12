@@ -1,3 +1,4 @@
+import { isUtf8 } from 'node:buffer';
 import { ignoredDirectories } from './scan-options.js';
 import { lstat, readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
@@ -21,16 +22,18 @@ export async function collectPaths(directory, options = {}) {
   while (pending.length) {
     const current = pending.pop();
     if (!current) break;
-    const entries = await readdir(current.absolute, { withFileTypes: true });
+    const entries = await readdir(current.absolute, { withFileTypes: true, encoding: 'buffer' });
     for (const entry of entries) {
-      if (entry.isDirectory() && ignore.has(entry.name)) continue;
-      if (entry.name.includes('\\')) {
+      if (!isUtf8(entry.name)) throw new TypeError('Cannot represent a filename containing invalid UTF-8.');
+      const name = entry.name.toString('utf8');
+      if (entry.isDirectory() && ignore.has(name)) continue;
+      if (name.includes('\\')) {
         throw new TypeError('Cannot represent a filename containing a literal backslash.');
       }
-      const relative = current.relative ? `${current.relative}/${entry.name}` : entry.name;
+      const relative = current.relative ? `${current.relative}/${name}` : name;
       parseRelativePath(relative);
       paths.push(relative);
-      if (entry.isDirectory()) pending.push({ absolute: join(current.absolute, entry.name), relative });
+      if (entry.isDirectory()) pending.push({ absolute: join(current.absolute, name), relative });
     }
   }
   return paths.sort();

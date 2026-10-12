@@ -56,3 +56,25 @@ test('walk fails explicitly on POSIX literal backslash names', async (t) => {
   await writeFile(join(root, 'literal\\name'), '');
   await assert.rejects(collectPaths(root), /literal backslash/);
 });
+
+test('walk preserves valid Unicode including replacement characters and BOM', async (t) => {
+  const root = await fixture(t);
+  const names = ['replacement-\uFFFD', '\uFEFFguide', 'emoji-😀'];
+  for (const name of names) await writeFile(join(root, name), '');
+  assert.deepEqual(await collectPaths(root), names.sort());
+});
+
+test('walk rejects invalid UTF-8 bytes instead of replacing the filename', async (t) => {
+  if (process.platform === 'win32') { t.skip('Windows paths use Unicode'); return; }
+  const root = await fixture(t);
+  const filename = Buffer.concat([Buffer.from(`${root}/invalid-`), Buffer.from([0xff])]);
+  try {
+    await writeFile(filename, '');
+  } catch (error) {
+    if (['EILSEQ', 'EINVAL'].includes(error.code)) {
+      t.skip('Filesystem rejects invalid UTF-8 names'); return;
+    }
+    throw error;
+  }
+  await assert.rejects(collectPaths(root), /invalid UTF-8/);
+});
