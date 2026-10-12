@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 53 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests will follow when that feature is implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 56 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests will follow when that feature is implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 

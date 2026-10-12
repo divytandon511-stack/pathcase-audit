@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, rm, symlink, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { collectPaths } from '../src/walk.js';
@@ -75,6 +75,10 @@ test('walk rejects invalid UTF-8 bytes instead of replacing the filename', async
       t.skip('Filesystem rejects invalid UTF-8 names'); return;
     }
     throw error;
+  }
+  const stored = await readdir(root, { encoding: 'buffer' });
+  if (!stored.some((name) => name.equals(Buffer.concat([Buffer.from('invalid-'), Buffer.from([0xff])])))) {
+    t.skip('Filesystem transforms invalid UTF-8 names'); return;
   }
   await assert.rejects(collectPaths(root), /invalid UTF-8/);
 });
