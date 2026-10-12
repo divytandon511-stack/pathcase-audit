@@ -6,7 +6,7 @@ A Node.js utility in development for detecting ASCII case collisions in proposed
 
 ## Current status
 
-This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner is now available with default ignores; custom ignores and the CLI are still pending. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
+This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner supports configurable ignores; the CLI is still pending. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
 
 - [API guide](docs/api.md): parameters, return fields, errors and interpreting nested reports.
 - [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 44 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests will follow when that feature is implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 51 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests will follow when that feature is implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -80,6 +80,6 @@ const report = await scanDirectory('./src');
 console.log(report);
 ```
 
-The root defaults to `.` and may be absolute or relative. Reports use paths relative to that root with `/` separators. Entries include files, directories and symlink names; symlinks are not intentionally followed, and a symlink root is rejected. `.git` and `node_modules` directories are skipped at every depth. Ignore customization is still under development.
+The root defaults to `.` and may be absolute or relative. Reports use paths relative to that root with `/` separators. Entries include files, directories and symlink names; symlinks are not intentionally followed, and a symlink root is rejected. `.git` and `node_modules` directories are skipped at every depth. Pass `{ ignore: [".git", "node_modules", "build"] }` as the second argument to replace those defaults, or `{ ignore: [] }` to include all directories. Ignore names are exact, case-sensitive basenames at any depth, not globs. Files and symlinks are still checked even if their names match. Null, sparse or malformed lists and unknown option keys are rejected. The list is copied when the scan starts.
 
 Invalid roots/names and filesystem read errors reject the promise instead of returning a partial result. A POSIX name containing a literal backslash cannot be represented by the path grammar and is rejected. Scans require a stable tree and are not atomic or a security boundary: concurrent directory replacement can affect traversal. Only names actually present on disk can be checked; use `checkPaths` for names that your filesystem cannot store together.

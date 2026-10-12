@@ -86,3 +86,23 @@ Reports contain plain JSON-compatible data. `JSON.stringify(report)` preserves o
 Ordering does not depend on the process locale. Duplicate input strings and input order do not change the serialized report. This is useful when comparing results between CI runs.
 
 The checker keeps parsed paths and prefix metadata in memory. It gathers original-path evidence only for conflicting prefixes, which avoids path sets for clean prefixes. Conflicting manifests require a second traversal, and very large reports can still be large. This API is not streaming and does not promise constant memory or a fixed maximum input size.
+
+## Scan options and errors
+
+`scanDirectory(directory = '.', options = {})` returns `Promise<CheckResult>`. `options.ignore` is an optional readonly string array that replaces the default `['.git', 'node_modules']`. Names must be nonempty basenames without slashes, NUL, `.` or `..`. There is no glob or `.gitignore` interpretation. Use an empty array to scan every directory.
+
+Validation failures reject with TypeError. Filesystem failures retain the Node error's `code` and `path`; unreadable subdirectories reject the entire scan rather than produce a partial clean report. Explicitly ignored directories are not opened. Catch errors at the call site:
+
+```js
+import { scanDirectory } from 'pathcase-audit';
+
+try {
+  const report = await scanDirectory('.', { ignore: ['.git', 'node_modules', 'build'] });
+  console.log(report);
+} catch (error) {
+  console.error('Scan failed:', error);
+  // Stop the operation; a failed scan is not a clean scan.
+}
+```
+
+A symlink whose basename matches an ignored directory remains an entry in the report input; its target is not traversed. The API does not silently skip permission failures or inaccessible non-ignored subtrees.
