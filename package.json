@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/path.js && node --check src/collisions.js && node --check src/index.js",
+    "check": "node --check src/path.js && node --check src/collisions.js && node --check src/index.js && node --check src/walk.js",
     "example": "node examples/proposed-paths.js",
     "example:import": "node examples/check-import.js",
     "test:types": "tsc -p type-tests/tsconfig.json && tsc -p type-tests/tsconfig.json --module ESNext --moduleResolution Bundler",
@@ -30,6 +30,7 @@
   },
   "types": "./src/index.d.ts",
   "devDependencies": {
+    "@types/node": "22.20.5",
     "typescript": "7.0.2"
   }
 }
