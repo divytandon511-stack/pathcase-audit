@@ -33,7 +33,11 @@ checkPaths(null);
 checkPaths();
 // @ts-expect-error Only the root package entry is public.
 import { parsePathList } from 'pathcase-audit/src/path.js';
-// @ts-expect-error Filesystem scanning has not shipped yet.
 import { scanDirectory } from 'pathcase-audit';
 // @ts-expect-error Component index must remain numeric.
 report.collisions[0]!.componentIndex = 'first';
+
+const scan: Promise<CheckResult> = scanDirectory('.');
+scanDirectory();
+// @ts-expect-error Root must be a string.
+scanDirectory(123);

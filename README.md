@@ -6,7 +6,7 @@ A Node.js utility in development for detecting ASCII case collisions in proposed
 
 ## Current status
 
-This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner and CLI are not ready. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
+This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner is now available with default ignores; custom ignores and the CLI are still pending. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
 
 - [API guide](docs/api.md): parameters, return fields, errors and interpreting nested reports.
 - [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 36 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem scanning and CLI tests will follow when those features are implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 44 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests will follow when that feature is implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -36,7 +36,7 @@ Read the comparison contract before changing behavior. Include a focused regress
 
 ## Automated checks
 
-GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This currently checks the proposed-path API and its helpers, not the planned disk scanner or CLI. The workflow has read-only repository permissions and does not publish packages.
+GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This checks the proposed-path API, initial directory scanner and their helpers; the CLI is still planned. The workflow has read-only repository permissions and does not publish packages.
 
 ## Check proposed paths
 
@@ -71,3 +71,15 @@ In your own import pipeline, call `checkPaths(manifest.map(entry => entry.destin
 TypeScript declarations are included for the proposed-path API. `npm run test:types` checks package-name imports under both NodeNext and Bundler module resolution, including readonly inputs, result fields, rejected invalid calls and blocked internal imports. These checks also run in CI. TypeScript is a pinned development dependency only; the runtime API still has zero dependencies. See the [TypeScript usage example](docs/api.md#typescript).
 
 `npm run check:source` also checks the actual JavaScript with JSDoc annotations against the exported result types, without generating files or requiring a build. It complements consumer type tests and runtime tests; it does not replace either. This check runs in every CI matrix job.
+
+## Scan an existing directory
+
+```js
+import { scanDirectory } from 'pathcase-audit';
+const report = await scanDirectory('./src');
+console.log(report);
+```
+
+The root defaults to `.` and may be absolute or relative. Reports use paths relative to that root with `/` separators. Entries include files, directories and symlink names; symlinks are not intentionally followed, and a symlink root is rejected. `.git` and `node_modules` directories are skipped at every depth. Ignore customization is still under development.
+
+Invalid roots/names and filesystem read errors reject the promise instead of returning a partial result. A POSIX name containing a literal backslash cannot be represented by the path grammar and is rejected. Scans require a stable tree and are not atomic or a security boundary: concurrent directory replacement can affect traversal. Only names actually present on disk can be checked; use `checkPaths` for names that your filesystem cannot store together.

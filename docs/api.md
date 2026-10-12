@@ -1,6 +1,6 @@
 # Proposed-path API
 
-Available in the current development checkout. TypeScript declarations are included. npm publication, directory scanning and the CLI are still pending.
+Available in the current development checkout. TypeScript declarations are included. The initial directory scanner is also available (see README); npm publication and the CLI are still pending.
 
 ## checkPaths(paths)
 
@@ -60,7 +60,7 @@ A bad container or path throws TypeError; there is no partial report. Invalid pa
 
 It means there are no ASCII case collisions in the supplied list. It does not certify valid Windows names, Unicode compatibility, absence of duplicate destinations, type consistency (`file` versus `file/child`), or existence of files. It also does not parse imports or check whether an import statement's casing matches a real file.
 
-Check the original proposed manifest before writing it to a case-insensitive filesystem. A list obtained after files have already been overwritten may no longer contain the conflicting names. These are separate concerns from the disk-scanning API planned for later development.
+Check the original proposed manifest before writing it to a case-insensitive filesystem. A list obtained after files have already been overwritten may no longer contain the conflicting names. These concerns remain distinct from scanning existing entries with scanDirectory.
 
 ## TypeScript
 
@@ -77,7 +77,7 @@ for (const collision of result.collisions) {
 }
 ```
 
-Types describe strings, not whether a string is a valid relative path. Invalid path syntax still throws at runtime. The declarations do not promise an unimplemented scanner or CLI, and internal helpers are not public exports.
+Types describe strings, not whether a string is a valid relative path. Invalid path syntax still throws at runtime. The declarations include the initial scanner alongside checkPaths. Internal helpers are not public exports.
 
 ## Serialization and larger manifests
 

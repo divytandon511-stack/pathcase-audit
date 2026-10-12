@@ -1,6 +1,6 @@
 # Path comparison contract
 
-Status: the proposed-path API implements this comparison contract. Directory scanning and CLI behavior below remain planned.
+Status: the proposed-path API implements this comparison contract. Initial directory scanning is available; custom ignore options and CLI behavior below remain planned.
 
 ## Problem and scope
 

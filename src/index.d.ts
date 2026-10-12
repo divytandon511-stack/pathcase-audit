@@ -23,3 +23,10 @@ export interface CheckResult {
  * @throws {TypeError} Invalid container or relative path; no partial result.
  */
 export declare function checkPaths(paths: readonly string[]): CheckResult;
+
+/**
+ * Scan existing entries relative to a real directory (defaults to .).
+ * Skips .git and node_modules directories and never intentionally follows symlinks.
+ * Rejects invalid roots, unrepresentable names and filesystem errors.
+ */
+export declare function scanDirectory(directory?: string): Promise<CheckResult>;
