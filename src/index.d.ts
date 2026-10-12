@@ -29,4 +29,8 @@ export declare function checkPaths(paths: readonly string[]): CheckResult;
  * Skips .git and node_modules directories and never intentionally follows symlinks.
  * Rejects invalid roots, unrepresentable names and filesystem errors.
  */
-export declare function scanDirectory(directory?: string): Promise<CheckResult>;
+export interface ScanOptions {
+  /** Exact case-sensitive directory basenames; replaces .git/node_modules defaults. */
+  ignore?: readonly string[];
+}
+export declare function scanDirectory(directory?: string, options?: ScanOptions): Promise<CheckResult>;

@@ -41,3 +41,8 @@ const scan: Promise<CheckResult> = scanDirectory('.');
 scanDirectory();
 // @ts-expect-error Root must be a string.
 scanDirectory(123);
+scanDirectory('.', { ignore: ['build'] as const });
+// @ts-expect-error Ignore names must be strings.
+scanDirectory('.', { ignore: [3] });
+// @ts-expect-error Unknown options are rejected.
+scanDirectory('.', { followSymlinks: true });

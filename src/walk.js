@@ -1,12 +1,15 @@
+import { ignoredDirectories } from './scan-options.js';
 import { lstat, readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { parseRelativePath } from './path.js';
 
 /** Collect actual relative entries without intentionally following symlinks.
  * @param {string} directory
+ * @param {import('./index.d.ts').ScanOptions} [options]
  * @returns {Promise<string[]>}
  */
-export async function collectPaths(directory) {
+export async function collectPaths(directory, options = {}) {
+  const ignore = ignoredDirectories(options);
   if (typeof directory !== 'string' || !directory || directory.includes('\0')) {
     throw new TypeError('Directory must be a nonempty string without NUL.');
   }
@@ -20,7 +23,7 @@ export async function collectPaths(directory) {
     if (!current) break;
     const entries = await readdir(current.absolute, { withFileTypes: true });
     for (const entry of entries) {
-      if (entry.isDirectory() && ['.git', 'node_modules'].includes(entry.name)) continue;
+      if (entry.isDirectory() && ignore.has(entry.name)) continue;
       if (entry.name.includes('\\')) {
         throw new TypeError('Cannot represent a filename containing a literal backslash.');
       }

@@ -13,8 +13,9 @@ export function checkPaths(paths) {
 
 /** Scan existing directory entries using the proposed-path comparison rule.
  * @param {string} [directory]
+ * @param {import('./index.d.ts').ScanOptions} [options]
  * @returns {Promise<import('./index.d.ts').CheckResult>}
  */
-export async function scanDirectory(directory = '.') {
-  return checkPaths(await collectPaths(directory));
+export async function scanDirectory(directory = '.', options = {}) {
+  return checkPaths(await collectPaths(directory, options));
 }
