@@ -1,6 +1,6 @@
 # Path comparison contract
 
-Status: the proposed-path API implements this comparison contract. Directory scanning and custom ignore options are available; the initial readable CLI is available. JSON output remains planned.
+Status: the proposed-path API implements this comparison contract. Directory scanning and custom ignore options are available; the initial readable CLI is available. JSON output uses the API result shape.
 
 ## Problem and scope
 

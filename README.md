@@ -6,7 +6,7 @@ A Node.js utility in development for detecting ASCII case collisions in proposed
 
 ## Current status
 
-This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner supports configurable ignores; the initial CLI now scans directories with readable reports. JSON output remains pending. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
+This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner supports configurable ignores; the initial CLI now scans directories with readable reports. JSON output is available with `--json`. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
 
 - [API guide](docs/api.md): parameters, return fields, errors and interpreting nested reports.
 - [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 64 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 67 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -89,6 +89,7 @@ Invalid roots/names and filesystem read errors reject the promise instead of ret
 ```sh
 node bin/pathcase-audit.js --help
 node bin/pathcase-audit.js ./src
+node bin/pathcase-audit.js ./src --json
 node bin/pathcase-audit.js . --ignore .git --ignore node_modules --ignore dist
 node bin/pathcase-audit.js . --no-ignore
 node bin/pathcase-audit.js -- -folder
@@ -96,4 +97,4 @@ node bin/pathcase-audit.js -- -folder
 
 The directory defaults to the current working directory. `--ignore NAME` replaces the default ignored directory basenames; repeat it for multiple names. `--no-ignore` includes all directories and cannot be combined with `--ignore`. Use `--` before a directory starting with a dash. Unknown options and extra directories fail, including when combined with help.
 
-Readable reports show each folded collision key, a one-based component number, the original variants and paths, and the reason. Names are quoted and control characters escaped. A clean scan prints `No ASCII case collisions found.` Reports/help go to stdout; failures go to stderr. Exit codes are **0** for clean/help, **1** for collisions and **2** for invalid arguments or scan failures. The CLI scans existing entries only; proposed paths use `checkPaths`. JSON output is not implemented yet.
+Readable reports show each folded collision key, a one-based component number, the original variants and paths, and the reason. Names are quoted and control characters escaped. A clean scan prints `No ASCII case collisions found.` Reports/help go to stdout; failures go to stderr. Exit codes are **0** for clean/help, **1** for collisions and **2** for invalid arguments or scan failures. The CLI scans existing entries only; proposed paths use `checkPaths`. `--json` writes one JSON object followed by a newline, with exactly the API result shape and zero-based `componentIndex`. Exit codes are unchanged. Help stays readable, and errors stay on stderr with empty stdout; failed scans never emit a partial JSON report.

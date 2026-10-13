@@ -6,6 +6,7 @@ const help = `Usage: pathcase-audit [directory] [options]
 Scan existing names for ASCII case collisions. Default directory: .
 
   -h, --help        Show this help
+  --json            Print the API result as JSON
   --ignore NAME     Replace default ignores; repeat for multiple names
   --no-ignore       Include all directories
   --                End options (for a directory beginning with -)
@@ -38,7 +39,7 @@ export async function runCli(args) {
     const options = parseCliOptions(args);
     if (options.help) { process.stdout.write(help); return 0; }
     const result = await scanDirectory(options.directory, options.scanOptions);
-    process.stdout.write(formatReport(result));
+    process.stdout.write(options.json ? `${JSON.stringify(result)}\n` : formatReport(result));
     return result.hasCollisions ? 1 : 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

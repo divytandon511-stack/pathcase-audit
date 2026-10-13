@@ -11,6 +11,7 @@ export function parseCliOptions(args) {
     strict: true,
     options: {
       help: { type: 'boolean', short: 'h' },
+      json: { type: 'boolean' },
       ignore: { type: 'string', multiple: true },
       'no-ignore': { type: 'boolean' },
     },
@@ -21,5 +22,5 @@ export function parseCliOptions(args) {
   ignoredDirectories({ ignore });
   const directory = positionals[0] ?? '.';
   if (!directory || directory.includes('\0')) throw new TypeError('Directory must be nonempty and contain no NUL.');
-  return { directory, help: values.help ?? false, scanOptions: { ignore } };
+  return { directory, json: values.json ?? false, help: values.help ?? false, scanOptions: { ignore } };
 }

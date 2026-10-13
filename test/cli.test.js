@@ -68,3 +68,44 @@ test('CLI exits 1 for real collisions and honors replacement ignores', async (t)
   assert.equal(result.stderr, '');
   assert.equal(run(['--ignore', 'Docs'], root).status, 0);
 });
+
+test('JSON clean output is exactly one API result with no prose', async (t) => {
+  const root = await fixture(t);
+  const result = run(['--json'], root);
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, '');
+  assert.equal(result.stdout, `${JSON.stringify(checkPaths([]))}\n`);
+});
+
+test('JSON option does not change help or failure streams', async (t) => {
+  const root = await fixture(t);
+  const help = run(['--json', '--help'], root);
+  assert.equal(help.status, 0);
+  assert.match(help.stdout, /^Usage:/);
+  assert.match(help.stdout, /--json/);
+  assert.equal(help.stderr, '');
+  for (const args of [['--json', 'missing'], ['--json=false'], ['--json', '--typo']]) {
+    const result = run(args, root);
+    assert.equal(result.status, 2);
+    assert.equal(result.stdout, '');
+    assert.match(result.stderr, /^pathcase-audit:/);
+  }
+});
+
+test('JSON collisions match the API and remain stable across executions', async (t) => {
+  const root = await fixture(t);
+  await mkdir(join(root, 'Docs'));
+  await mkdir(join(root, 'docs'), { recursive: true });
+  if ((await readdir(root)).length !== 2) { t.skip('Filesystem cannot store case variants'); return; }
+  await mkdir(join(root, 'Docs', 'Guide'));
+  await mkdir(join(root, 'docs', 'guide'));
+  const expected = checkPaths(['Docs', 'Docs/Guide', 'docs', 'docs/guide']);
+  const first = run(['--json'], root);
+  const second = run(['--json'], root);
+  assert.equal(first.status, 1);
+  assert.equal(second.status, 1);
+  assert.equal(first.stderr, '');
+  assert.deepEqual(JSON.parse(first.stdout), expected);
+  assert.equal(second.stdout, first.stdout);
+  assert.equal(run([], root).stdout, formatReport(expected));
+});

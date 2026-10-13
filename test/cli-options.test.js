@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { parseCliOptions } from '../src/cli-options.js';
 
 test('CLI defaults to current directory and preserves explicit paths', () => {
-  assert.deepEqual(parseCliOptions([]), { directory: '.', help: false, scanOptions: { ignore: undefined } });
+  assert.deepEqual(parseCliOptions([]), { directory: '.', json: false, help: false, scanOptions: { ignore: undefined } });
   assert.equal(parseCliOptions(['folder with spaces']).directory, 'folder with spaces');
   assert.equal(parseCliOptions(['--', '-folder']).directory, '-folder');
   assert.equal(parseCliOptions(['-h']).help, true);
