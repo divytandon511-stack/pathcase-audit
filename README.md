@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 74 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 76 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -101,4 +101,4 @@ Readable reports show each folded collision key, a one-based component number, t
 
 For shell/CI callers, check the exit status before parsing stdout. Exit 1 still carries a complete collision report; exit 2 carries only a diagnostic on stderr. Unreadable subtrees, file or symlink roots, and unrepresentable names fail the whole scan. Diagnostics quote control characters and omit stack traces. Error wording may include platform-specific filesystem details; depend on exit codes, not exact error text.
 
-The CLI waits for output writes to finish. Failed output writes (including broken pipes) exit 2; it attempts a diagnostic on stderr. If stderr also fails, the exit code still signals failure.
+The CLI waits for output writes to finish. Failed output writes (including broken pipes) exit 2; it attempts a diagnostic on stderr. If stderr also fails, the exit code still signals failure. An output-write failure can leave truncated stdout, so discard output on exit 2. Reports are built in memory; this is not a streaming scanner.

@@ -5,7 +5,7 @@ Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusiv
 
 ## Current state — 13 October
 
-The proposed-path API, validated scanner with configurable ignores, declarations, examples and cross-platform CI are implemented. The initial CLI supports help, readable/JSON reports, ignore options and exit codes. There are 74 runtime tests, including capability-aware filesystem and process tests. Further CLI error handling, distributable verification and publication remain pending. No completed prototype implementation has been copied into this repository.
+The proposed-path API, validated scanner with configurable ignores, declarations, examples and cross-platform CI are implemented. The initial CLI supports help, readable/JSON reports, ignore options and exit codes. There are 76 runtime tests, including capability-aware filesystem and process tests. Distributable verification, final documentation and publication remain pending. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
 GitHub reset status: RESET COMPLETE. On 9 October the credential was verified to have delete_repo and workflow scopes. The old repository was deleted successfully and its absence verified with GitHub API HTTP 404. The fresh public repository was created and its planning history verified; do not delete it again on scheduled runs.
 
@@ -98,3 +98,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 13 October, afternoon: added subprocess regressions for permission-denied subtrees, file/symlink roots, unrepresentable POSIX names and terminal controls in argument diagnostics, in both output modes. Confirmed ignored unreadable directories can be excluded deliberately. Host: 64 passed, seven capability skips; case-sensitive HFSX: 70 passed, one encoding skip. No production fix was needed. Four substantive commits completed today; output-stream edge cases remain for the evening, packaging and consumer installation for day 6.
 
 - 13 October, evening: fixed asynchronous output failures escaping the CLI error boundary. Output writes are now awaited; broken stdout and failed stderr return 2 without an uncaught stream error. Added delayed-write and failing-stream tests. Host: 67 passed, seven capability skips; source checks passed.
+
+- 13 October, evening: verified a real read-only stdout descriptor exits 2 without a stack trace, and complete readable/JSON reports exceeding 64 KiB survive redirected output for a 600-file case collision fixture. Host: 68 passed, eight capability skips; case-sensitive HFSX: 75 passed, one encoding skip. Source, types and syntax checks passed. Documented possible truncated output on write failure and in-memory reports. Six substantive commits completed today; next work is day 6 packaging, consumer installation and documentation.

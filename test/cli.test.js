@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { mkdtemp, mkdir, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { checkPaths } from 'pathcase-audit';
@@ -108,4 +108,27 @@ test('JSON collisions match the API and remain stable across executions', async 
   assert.deepEqual(JSON.parse(first.stdout), expected);
   assert.equal(second.stdout, first.stdout);
   assert.equal(run([], root).stdout, formatReport(expected));
+});
+
+
+test('CLI delivers a complete large report through redirected stdout', async (t) => {
+  const root = await fixture(t);
+  await mkdir(join(root, 'Docs'));
+  await mkdir(join(root, 'docs'), { recursive: true });
+  if ((await readdir(root)).length !== 2) { t.skip('Filesystem cannot store case variants'); return; }
+  const paths = ['Docs', 'docs'];
+  for (let index = 0; index < 600; index++) {
+    const path = `${index % 2 ? 'Docs' : 'docs'}/${index}-${'x'.repeat(160)}`;
+    await writeFile(join(root, path), '');
+    paths.push(path);
+  }
+  const expected = checkPaths(paths);
+  for (const args of [[], ['--json']]) {
+    const result = run(args, root);
+    assert.equal(result.error, undefined);
+    assert.equal(result.status, 1);
+    assert.equal(result.stderr, '');
+    assert.ok(Buffer.byteLength(result.stdout) > 65536);
+    assert.equal(result.stdout, args.length ? `${JSON.stringify(expected)}\n` : formatReport(expected));
+  }
 });

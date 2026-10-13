@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { mkdtemp, mkdir, writeFile, chmod, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, chmod, rm, symlink, open } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -65,4 +65,21 @@ test('CLI quotes terminal control characters in error messages', async (t) => {
   assert.ok(!result.stderr.includes('\u001b'));
   assert.ok(result.stderr.includes('\\n'));
   assert.ok(result.stderr.includes('\\u001b'));
+});
+
+
+test('CLI handles an actual unwritable stdout descriptor without a stack trace', async (t) => {
+  if (process.platform === 'win32') { t.skip('Requires POSIX descriptor access modes'); return; }
+  const root = await fixture(t);
+  const path = join(root, 'output');
+  await writeFile(path, '');
+  const file = await open(path, 'r');
+  try {
+    const result = spawnSync(process.execPath, [bin, '--help'], {
+      encoding: 'utf8', timeout: 10000, stdio: ['ignore', file.fd, 'pipe'],
+    });
+    assert.equal(result.status, 2);
+    assert.match(result.stderr, /^pathcase-audit: /);
+    assert.doesNotMatch(result.stderr, /Unhandled|\n\s+at /);
+  } finally { await file.close(); }
 });
