@@ -30,20 +30,44 @@ export function formatReport(result) {
   return `${lines.join('\n')}\n`;
 }
 
+/** Wait for output completion and consume asynchronous stream errors.
+ * @param {import('node:stream').Writable} stream
+ * @param {string} text
+ * @returns {Promise<void>}
+ */
+function writeOutput(stream, text) {
+  return new Promise((resolve, reject) => {
+    const onError = (/** @type {Error} */ error) => reject(error);
+    stream.once('error', onError);
+    try {
+      stream.write(text, (error) => {
+        if (error) { reject(error); return; }
+        stream.removeListener('error', onError);
+        resolve();
+      });
+    } catch (error) {
+      stream.removeListener('error', onError);
+      reject(error);
+    }
+  });
+}
+
 /** Run the CLI without forcing process termination or truncating output.
  * @param {string[]} args
+ * @param {{ stdout: import('node:stream').Writable, stderr: import('node:stream').Writable }} [io]
  * @returns {Promise<number>}
  */
-export async function runCli(args) {
+export async function runCli(args, io = process) {
   try {
     const options = parseCliOptions(args);
-    if (options.help) { process.stdout.write(help); return 0; }
+    if (options.help) { await writeOutput(io.stdout, help); return 0; }
     const result = await scanDirectory(options.directory, options.scanOptions);
-    process.stdout.write(options.json ? `${JSON.stringify(result)}\n` : formatReport(result));
+    await writeOutput(io.stdout, options.json ? `${JSON.stringify(result)}\n` : formatReport(result));
     return result.hasCollisions ? 1 : 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    process.stderr.write(`pathcase-audit: ${JSON.stringify(message)}\n`);
+    try { await writeOutput(io.stderr, `pathcase-audit: ${JSON.stringify(message)}\n`); }
+    catch { /* A failed diagnostic stream still means exit 2. */ }
     return 2;
   }
 }
