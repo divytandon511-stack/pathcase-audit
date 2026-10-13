@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 67 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 71 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -98,3 +98,5 @@ node bin/pathcase-audit.js -- -folder
 The directory defaults to the current working directory. `--ignore NAME` replaces the default ignored directory basenames; repeat it for multiple names. `--no-ignore` includes all directories and cannot be combined with `--ignore`. Use `--` before a directory starting with a dash. Unknown options and extra directories fail, including when combined with help.
 
 Readable reports show each folded collision key, a one-based component number, the original variants and paths, and the reason. Names are quoted and control characters escaped. A clean scan prints `No ASCII case collisions found.` Reports/help go to stdout; failures go to stderr. Exit codes are **0** for clean/help, **1** for collisions and **2** for invalid arguments or scan failures. The CLI scans existing entries only; proposed paths use `checkPaths`. `--json` writes one JSON object followed by a newline, with exactly the API result shape and zero-based `componentIndex`. Exit codes are unchanged. Help stays readable, and errors stay on stderr with empty stdout; failed scans never emit a partial JSON report.
+
+For shell/CI callers, check the exit status before parsing stdout. Exit 1 still carries a complete collision report; exit 2 carries only a diagnostic on stderr. Unreadable subtrees, file or symlink roots, and unrepresentable names fail the whole scan. Diagnostics quote control characters and omit stack traces. Error wording may include platform-specific filesystem details; depend on exit codes, not exact error text.
