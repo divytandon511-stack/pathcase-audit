@@ -16,6 +16,7 @@
     "src/collisions.js",
     "src/index.js",
     "src/walk.js",
-    "src/scan-options.js"
+    "src/scan-options.js",
+    "src/cli-options.js"
   ]
 }
