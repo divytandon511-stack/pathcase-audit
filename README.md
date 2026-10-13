@@ -6,7 +6,7 @@ A Node.js utility in development for detecting ASCII case collisions in proposed
 
 ## Current status
 
-This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner supports configurable ignores; the CLI is still pending. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
+This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner supports configurable ignores; the initial CLI now scans directories with readable reports. JSON output remains pending. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
 
 - [API guide](docs/api.md): parameters, return fields, errors and interpreting nested reports.
 - [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
@@ -28,7 +28,7 @@ npm test
 npm run test:types
 ```
 
-The current 56 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests will follow when that feature is implemented. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+The current 64 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
 
 ## Contributing
 
@@ -36,7 +36,7 @@ Read the comparison contract before changing behavior. Include a focused regress
 
 ## Automated checks
 
-GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This checks the proposed-path API, initial directory scanner and their helpers; the CLI is still planned. The workflow has read-only repository permissions and does not publish packages.
+GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This checks the proposed-path API, initial directory scanner and their helpers; the initial CLI is also checked. The workflow has read-only repository permissions and does not publish packages.
 
 ## Check proposed paths
 
@@ -83,3 +83,17 @@ console.log(report);
 The root defaults to `.` and may be absolute or relative. Reports use paths relative to that root with `/` separators. Entries include files, directories and symlink names; symlinks are not intentionally followed, and a symlink root is rejected. `.git` and `node_modules` directories are skipped at every depth. Pass `{ ignore: [".git", "node_modules", "build"] }` as the second argument to replace those defaults, or `{ ignore: [] }` to include all directories. Ignore names are exact, case-sensitive basenames at any depth, not globs. Files and symlinks are still checked even if their names match. Null, sparse or malformed lists and unknown option keys are rejected. The list is copied when the scan starts.
 
 Invalid roots/names and filesystem read errors reject the promise instead of returning a partial result. Filenames must be valid UTF-8; invalid bytes reject the scan rather than being silently replaced. A POSIX name containing a literal backslash cannot be represented by the path grammar and is rejected. Scans require a stable tree and are not atomic or a security boundary: concurrent directory replacement can affect traversal. Only names actually present on disk can be checked; use `checkPaths` for names that your filesystem cannot store together.
+
+## CLI (development checkout)
+
+```sh
+node bin/pathcase-audit.js --help
+node bin/pathcase-audit.js ./src
+node bin/pathcase-audit.js . --ignore .git --ignore node_modules --ignore dist
+node bin/pathcase-audit.js . --no-ignore
+node bin/pathcase-audit.js -- -folder
+```
+
+The directory defaults to the current working directory. `--ignore NAME` replaces the default ignored directory basenames; repeat it for multiple names. `--no-ignore` includes all directories and cannot be combined with `--ignore`. Use `--` before a directory starting with a dash. Unknown options and extra directories fail, including when combined with help.
+
+Readable reports show each folded collision key, a one-based component number, the original variants and paths, and the reason. Names are quoted and control characters escaped. A clean scan prints `No ASCII case collisions found.` Reports/help go to stdout; failures go to stderr. Exit codes are **0** for clean/help, **1** for collisions and **2** for invalid arguments or scan failures. The CLI scans existing entries only; proposed paths use `checkPaths`. JSON output is not implemented yet.

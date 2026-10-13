@@ -3,9 +3,9 @@
 Deadline: 18 November 2026 (Asia/Kolkata).
 Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusive, via heartbeat build-pathcase-audit-daily. Target 6–7 substantive commits per day, normally two per session; no empty or artificial commits. Assignment deadline remains 18 November.
 
-## Current state — 12 October
+## Current state — 13 October
 
-The proposed-path API, component grouping, validation, examples and cross-platform CI are implemented. Forty-four runtime tests include independent generated cases and initial filesystem traversal. TypeScript declarations, consumer type checks and JavaScript source checks are implemented. The initial scanner is implemented; custom scan options, CLI and publication remain pending. No completed prototype implementation has been copied into this repository.
+The proposed-path API, validated scanner with configurable ignores, declarations, examples and cross-platform CI are implemented. The initial CLI supports help, readable reports, ignore options and exit codes. There are 64 runtime tests, including capability-aware filesystem and process tests. JSON CLI output, further error handling, distributable verification and publication remain pending. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
 GitHub reset status: RESET COMPLETE. On 9 October the credential was verified to have delete_repo and workflow scopes. The old repository was deleted successfully and its absence verified with GitHub API HTTP 404. The fresh public repository was created and its planning history verified; do not delete it again on scheduled runs.
 
@@ -90,3 +90,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 12 October, evening: added real file/directory, empty-directory, symlink and exact-ignore collision tests. Case-sensitive HFSX run: 56 tests, 55 passed, one encoding-capability skip. That volume transforms invalid byte names, so the encoding test now verifies the stored bytes before claiming coverage; the host filesystem rejects creation instead. Host run: 51 passed, five capability skips. Six substantive commits completed today; CLI implementation remains tomorrow's milestone.
 
 - 13 October, morning: added strict CLI argument parsing with one optional directory, help, repeated replacement ignores, --no-ignore and -- for dash-prefixed paths. Malformed arguments and contradictory ignore options reject before scanning. Host run: 59 tests, 54 passed and five filesystem-capability skips; source checks passed. The executable is the next bounded task; JSON output remains for later today.
+
+- 13 October, morning: added the executable npm bin and readable directory-scan command, with help, escaped names, one-based components and exit codes 0/1/2. Added process tests for help, cwd, dash-prefixed roots, errors, real collisions and ignores. Host: 58 passed, six skips; case-sensitive HFSX: 63 passed, one invalid-encoding capability skip. Source, consumer types and syntax checks passed. Two morning commits completed; JSON output and further CLI error tests remain for today's later sessions.

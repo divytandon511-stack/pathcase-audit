@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/path.js && node --check src/collisions.js && node --check src/index.js && node --check src/walk.js && node --check src/scan-options.js && node --check src/cli-options.js",
+    "check": "node --check src/path.js && node --check src/collisions.js && node --check src/index.js && node --check src/walk.js && node --check src/scan-options.js && node --check src/cli-options.js && node --check src/cli.js && node --check bin/pathcase-audit.js",
     "example": "node examples/proposed-paths.js",
     "example:import": "node examples/check-import.js",
     "test:types": "tsc -p type-tests/tsconfig.json && tsc -p type-tests/tsconfig.json --module ESNext --moduleResolution Bundler",
@@ -32,5 +32,8 @@
   "devDependencies": {
     "@types/node": "22.20.5",
     "typescript": "7.0.2"
+  },
+  "bin": {
+    "pathcase-audit": "./bin/pathcase-audit.js"
   }
 }

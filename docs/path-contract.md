@@ -1,6 +1,6 @@
 # Path comparison contract
 
-Status: the proposed-path API implements this comparison contract. Directory scanning and custom ignore options are available; CLI behavior below remains planned.
+Status: the proposed-path API implements this comparison contract. Directory scanning and custom ignore options are available; the initial readable CLI is available. JSON output remains planned.
 
 ## Problem and scope
 
@@ -35,11 +35,11 @@ Index each component by its ASCII-folded full prefix. Report a group only if it 
 
 The `checkPaths(paths)` result is `{ hasCollisions, collisions }`. Each collision contains `key`, `componentIndex`, `variants`, `paths`, and `reason`. Sort keys, variants and original paths with locale-independent JavaScript code-unit ordering. A single input may participate in multiple groups. Invalid proposed inputs throw TypeError and never return partial results.
 
-## Existing directory scans (planned)
+## Existing directory scans
 
-`scanDirectory` will inspect entries actually present on disk; it cannot reconstruct overwritten or rejected names. Include directories and symlink names, do not follow symlinks, and reject a symlink scan root. Default excluded directory basenames are `.git` and `node_modules`; explicit API ignores replace these defaults. Match ignore names exactly and case-sensitively, without globs. Reject unrepresentable on-disk names, including literal POSIX backslashes. Propagate permission and read failures rather than report an incomplete scan as clean. Scans require a stable tree; they are not atomic or a security boundary.
+`scanDirectory` inspects entries actually present on disk; it cannot reconstruct overwritten or rejected names. Include directories and symlink names, do not follow symlinks, and reject a symlink scan root. Default excluded directory basenames are `.git` and `node_modules`; explicit API ignores replace these defaults. Match ignore names exactly and case-sensitively, without globs. Reject unrepresentable on-disk names, including literal POSIX backslashes. Propagate permission and read failures rather than report an incomplete scan as clean. Scans require a stable tree; they are not atomic or a security boundary.
 
-The planned CLI exit codes are 0 for clean/help, 1 for collisions, and 2 for bad arguments or scan errors. JSON and readable output must describe the same groups.
+The CLI exit codes are 0 for clean/help, 1 for collisions, and 2 for bad arguments or scan errors. JSON and readable output must describe the same groups.
 
 ## Acceptance strategy
 

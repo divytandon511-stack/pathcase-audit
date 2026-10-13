@@ -17,6 +17,8 @@
     "src/index.js",
     "src/walk.js",
     "src/scan-options.js",
-    "src/cli-options.js"
+    "src/cli-options.js",
+    "src/cli.js",
+    "bin/pathcase-audit.js"
   ]
 }
