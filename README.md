@@ -154,7 +154,7 @@ npm run check:install
 
 The 76 runtime tests cover comparison, validation, generated reference cases, scanner behavior, errors, CLI output and exit codes. Filesystem-dependent tests explicitly skip unsupported capabilities. Source checks use JSDoc; consumer type checks use NodeNext and Bundler resolution.
 
-`check:package` checks `npm pack --dry-run` contents. `check:install` creates a real tarball, installs it offline in a temporary project, verifies API/scanner/export boundaries, installed CLI and declarations, then removes the temporary project. Neither publishes. The tarball contains runtime source, CLI, docs, examples, README, license and metadata; development files remain in GitHub.
+`check:package` checks `npm pack --dry-run` contents and local documentation link targets inside the tarball. `check:install` creates a real tarball, installs it offline in a temporary project, verifies API/scanner/export boundaries, installed CLI (including collisions on capable filesystems), bundled examples and declarations, then removes the temporary project. Neither publishes. The tarball contains runtime source, CLI, docs, examples, README, license and metadata; development files remain in GitHub.
 
 [GitHub Actions](https://github.com/divytandon511-stack/pathcase-audit/actions) runs these checks on Node 22/24 across Linux, macOS and Windows. The workflow has read-only permissions and does not publish packages.
 
