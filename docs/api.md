@@ -1,6 +1,6 @@
-# Proposed-path API
+# API reference
 
-Available in the current development checkout. TypeScript declarations are included. The initial directory scanner is also available (see README); npm publication and the CLI are still pending.
+Available in the current development checkout. TypeScript declarations are included. The directory scanner and CLI are available; npm publication remains pending.
 
 ## checkPaths(paths)
 
@@ -64,7 +64,7 @@ Check the original proposed manifest before writing it to a case-insensitive fil
 
 ## TypeScript
 
-The package exports `CheckResult` and `Collision` types alongside `checkPaths`. Readonly arrays and readonly tuples are accepted because inputs are not mutated. Returned objects and arrays are mutable, matching runtime behavior.
+The package exports `CheckResult`, `Collision` and `ScanOptions` types alongside `checkPaths` and `scanDirectory`. Readonly arrays and readonly tuples are accepted because inputs are not mutated. Returned objects and arrays are mutable, matching runtime behavior.
 
 ```ts
 import { checkPaths, type CheckResult, type Collision } from 'pathcase-audit';
@@ -87,7 +87,7 @@ Ordering does not depend on the process locale. Duplicate input strings and inpu
 
 The checker keeps parsed paths and prefix metadata in memory. It gathers original-path evidence only for conflicting prefixes, which avoids path sets for clean prefixes. Conflicting manifests require a second traversal, and very large reports can still be large. This API is not streaming and does not promise constant memory or a fixed maximum input size.
 
-## Scan options and errors
+## scanDirectory(directory, options)
 
 `scanDirectory(directory = '.', options = {})` returns `Promise<CheckResult>`. `options.ignore` is an optional readonly string array that replaces the default `['.git', 'node_modules']`. Names must be nonempty basenames without slashes, NUL, `.` or `..`. There is no glob or `.gitignore` interpretation. Use an empty array to scan every directory.
 

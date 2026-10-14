@@ -1,115 +1,163 @@
 # pathcase-audit
 
-A Node.js utility in development for detecting ASCII case collisions in proposed paths and directory trees.
+Detect ASCII case collisions in proposed paths and existing directory trees, with a small Node.js API and CLI. No runtime dependencies.
 
-`Docs/a.txt` and `docs/b.txt` can coexist on a case-sensitive disk but conflict at the directory component when copied elsewhere. This project aims to expose that risk through a small JavaScript API and CLI. Filename portability is an existing problem; the focus here is precise behavior and clear reports.
+`Docs/a.txt` and `docs/b.txt` can coexist on a case-sensitive disk but conflict at their parent directory when copied to a case-insensitive destination. Checking only filenames misses this. pathcase-audit checks every component and reports the original paths so you can resolve conflicts before copying files or importing a batch.
 
-## Current status
+Filename portability is an existing problem. This package focuses on ASCII case collisions; it does not certify full Windows, macOS or Unicode compatibility.
 
-This repository is being rebuilt incrementally. The proposed-path API is implemented and tested. The directory scanner supports configurable ignores; the initial CLI now scans directories with readable reports. JSON output is available with `--json`. There is no published npm release. Do not use the earlier prototype's installation claims for this rebuild.
+## Status and installation
 
-- [API guide](docs/api.md): parameters, return fields, errors and interpreting nested reports.
-- [Path comparison contract](docs/path-contract.md): grammar, comparison rule, proposed result and acceptance cases.
-- [Development plan](DEVELOPMENT-PLAN.md): milestones and actual progress.
+Requires **Node.js 22 or newer**. The current version is **0.1.0-dev.0**, marked private while release verification is in progress. **This rebuild has not been published to npm.** The API, CLI and fresh tarball installation have been tested; registry publication remains pending.
 
-The initial release will check ASCII case only, not full Unicode or operating-system filename compatibility.
-
-## Run the current development tests
-
-Requires Node.js 22 or newer.
+To use the development checkout:
 
 ```sh
 git clone https://github.com/divytandon511-stack/pathcase-audit.git
 cd pathcase-audit
 npm ci
-npm run check
-npm run check:source
-npm test
-npm run test:types
+node bin/pathcase-audit.js --help
 ```
 
-The current 76 tests cover path grammar, manifest validation, component grouping and the public API. Invalid manifest entries identify their zero-based input index; exact duplicate strings are removed while separator aliases retain their original spelling. Filesystem tests cover the initial scanner; CLI tests check help, reports, errors and exit codes. The package is marked private at development version `0.1.0-dev.0` to prevent accidental publication before release verification is complete.
+To install this version into another project, run `npm pack` in the checkout, then install the resulting local tarball from your consumer project:
 
-## Contributing
+```sh
+npm install /absolute/path/to/pathcase-audit-0.1.0-dev.0.tgz
+npx --offline pathcase-audit --help
+```
 
-Read the comparison contract before changing behavior. Include a focused regression test with fixes, run the commands above, and distinguish implemented behavior from planned features in documentation. MIT licensed; see LICENSE.
-
-## Automated checks
-
-GitHub Actions runs the test suite on Node.js 22 and 24 across Linux, macOS and Windows for pushes and pull requests. See the repository's Actions tab for actual run results. This checks the proposed-path API, initial directory scanner and their helpers; the initial CLI is also checked. The workflow has read-only repository permissions and does not publish packages.
+Replace the absolute path with the actual tarball location. This uses the locally built package, not a registry release. The examples below use ESM (`.mjs`, or `"type": "module"` in your package.json). TypeScript declarations are included.
 
 ## Check proposed paths
-
-From this clone, run `npm run example`, or use the development API:
 
 ```js
 import { checkPaths } from 'pathcase-audit';
 
-const result = checkPaths(['Docs/Guide.md', 'docs/Guide.md']);
-console.log(result.hasCollisions); // true
-console.log(result.collisions[0].variants); // ['Docs', 'docs']
+const report = checkPaths(['Docs/Guide.md', 'docs/Guide.md']);
+console.log(report.hasCollisions); // true
+console.log(report.collisions[0].variants); // ['Docs', 'docs']
 ```
 
-`checkPaths(paths)` takes an array of relative strings and returns `{ hasCollisions, collisions }` synchronously. It does not access disk. Each collision has a folded prefix `key`, zero-based `componentIndex`, original `variants`, contributing original `paths`, and a `reason`. Groups, variants and paths use locale-independent code-unit ordering. An empty list returns `{ hasCollisions: false, collisions: [] }`.
+`checkPaths(paths: readonly string[]): CheckResult` is synchronous, does not mutate inputs and never accesses disk. Use it before writing an import manifest, even if your current filesystem cannot store the proposed names together. An empty list returns `{ hasCollisions: false, collisions: [] }`.
 
-Invalid inputs throw `TypeError`; an invalid entry's message includes its zero-based index. Both slash styles are separators. Exact duplicates are ignored, while all input strings contributing to a case conflict retain their spelling. See the [contract](docs/path-contract.md) for the complete grammar and comparison limitations. This development API is available from the clone; npm installation by name is not available yet.
+| Result field | Meaning |
+| --- | --- |
+| `hasCollisions` | Whether any component has conflicting spellings |
+| `collisions` | Groups sorted by folded prefix |
+| `key` | ASCII-folded prefix through the conflicting component |
+| `componentIndex` | Zero-based component position |
+| `variants` | Sorted original spellings of that component |
+| `paths` | Sorted original inputs contributing to the group |
+| `reason` | Explanation of the comparison rule |
 
-## Check an import before writing files
+Both slash styles separate components. Exact duplicates are removed; separator aliases alone do not collide. Rejects absolute paths, drive prefixes, empty components, `.`/`..`, NUL, nonstrings and sparse arrays with `TypeError`. Invalid entries identify their zero-based index. Only A–Z are folded; sorting uses locale-independent JavaScript code-unit order.
 
-The manifest example reads `examples/import-manifest.json` and checks each entry's `destination`. Source IDs are metadata for the hypothetical importer; the checker only needs destination paths.
+See the [API guide](docs/api.md) for nested reports, parameters, return fields, TypeScript and error handling, and the [comparison contract](docs/path-contract.md) for the complete grammar.
 
-```sh
-npm run example:import
-```
-
-This example intentionally returns **exit code 1** because `Docs/Guide.md` and `docs/Setup.md` conflict at their parent directory. Its JSON report names both paths; `assets/logo.svg` is unrelated and is not included. No proposed files or directories are created, so it works even on a case-insensitive disk.
-
-In your own import pipeline, call `checkPaths(manifest.map(entry => entry.destination))` before any writes and stop if `hasCollisions` is true. A clean report means only that no ASCII case collision was found; your importer must still validate other destination restrictions and its own manifest schema. The example is a small API integration, not the planned directory-scanning CLI.
-
-## Type checks
-
-TypeScript declarations are included for the proposed-path API. `npm run test:types` checks package-name imports under both NodeNext and Bundler module resolution, including readonly inputs, result fields, rejected invalid calls and blocked internal imports. These checks also run in CI. TypeScript is a pinned development dependency only; the runtime API still has zero dependencies. See the [TypeScript usage example](docs/api.md#typescript).
-
-`npm run check:source` also checks the actual JavaScript with JSDoc annotations against the exported result types, without generating files or requiring a build. It complements consumer type tests and runtime tests; it does not replace either. This check runs in every CI matrix job.
-
-## Scan an existing directory
+## Scan existing entries
 
 ```js
 import { scanDirectory } from 'pathcase-audit';
-const report = await scanDirectory('./src');
-console.log(report);
+
+const report = await scanDirectory('./src', {
+  ignore: ['.git', 'node_modules', 'build'],
+});
+console.log(report.hasCollisions);
 ```
 
-The root defaults to `.` and may be absolute or relative. Reports use paths relative to that root with `/` separators. Entries include files, directories and symlink names; symlinks are not intentionally followed, and a symlink root is rejected. `.git` and `node_modules` directories are skipped at every depth. Pass `{ ignore: [".git", "node_modules", "build"] }` as the second argument to replace those defaults, or `{ ignore: [] }` to include all directories. Ignore names are exact, case-sensitive basenames at any depth, not globs. Files and symlinks are still checked even if their names match. Null, sparse or malformed lists and unknown option keys are rejected. The list is copied when the scan starts.
+`scanDirectory(directory = '.', options = {}): Promise<CheckResult>` accepts an absolute or relative root and returns the same report shape. Paths in reports are relative to the root and use `/`. Files, directories (including empty directories), hidden entries and symlink names are included. Symlinks are not intentionally followed; a symlink root is rejected.
 
-Invalid roots/names and filesystem read errors reject the promise instead of returning a partial result. Filenames must be valid UTF-8; invalid bytes reject the scan rather than being silently replaced. A POSIX name containing a literal backslash cannot be represented by the path grammar and is rejected. Scans require a stable tree and are not atomic or a security boundary: concurrent directory replacement can affect traversal. Only names actually present on disk can be checked; use `checkPaths` for names that your filesystem cannot store together.
+By default, `.git` and `node_modules` directories are skipped at every depth. `options.ignore` replaces those defaults; use `[]` to include all directories. Names are exact, case-sensitive basenames, without globs or `.gitignore` processing. Files and symlinks matching an ignore name are still checked. Invalid options reject with `TypeError`; filesystem errors retain their Node `code` and `path`. Unreadable subtrees fail the entire scan, never a partial clean result.
 
-## CLI (development checkout)
+## CLI
+
+After local tarball installation:
 
 ```sh
-node bin/pathcase-audit.js --help
-node bin/pathcase-audit.js ./src
-node bin/pathcase-audit.js ./src --json
-node bin/pathcase-audit.js . --ignore .git --ignore node_modules --ignore dist
-node bin/pathcase-audit.js . --no-ignore
-node bin/pathcase-audit.js -- -folder
+npx --offline pathcase-audit ./src
+npx --offline pathcase-audit ./src --json
+npx --offline pathcase-audit . --ignore .git --ignore node_modules --ignore dist
+npx --offline pathcase-audit . --no-ignore
+npx --offline pathcase-audit -- -folder
 ```
 
-The directory defaults to the current working directory. `--ignore NAME` replaces the default ignored directory basenames; repeat it for multiple names. `--no-ignore` includes all directories and cannot be combined with `--ignore`. Use `--` before a directory starting with a dash. Unknown options and extra directories fail, including when combined with help.
+In the repository, replace `npx --offline pathcase-audit` with `node bin/pathcase-audit.js`.
 
-Readable reports show each folded collision key, a one-based component number, the original variants and paths, and the reason. Names are quoted and control characters escaped. A clean scan prints `No ASCII case collisions found.` Reports/help go to stdout; failures go to stderr. Exit codes are **0** for clean/help, **1** for collisions and **2** for invalid arguments or scan failures. The CLI scans existing entries only; proposed paths use `checkPaths`. `--json` writes one JSON object followed by a newline, with exactly the API result shape and zero-based `componentIndex`. Exit codes are unchanged. Help stays readable, and errors stay on stderr with empty stdout; failed scans never emit a partial JSON report.
+| Argument | Behavior |
+| --- | --- |
+| `[directory]` | One optional root, default `.` |
+| `-h`, `--help` | Print usage without scanning |
+| `--json` | Print one JSON API result and a newline |
+| `--ignore NAME` | Replace default ignores; repeat for multiple names |
+| `--no-ignore` | Include all directories; cannot combine with `--ignore` |
+| `--` | End options, allowing a dash-prefixed root |
 
-For shell/CI callers, check the exit status before parsing stdout. Exit 1 still carries a complete collision report; exit 2 carries only a diagnostic on stderr. Unreadable subtrees, file or symlink roots, and unrepresentable names fail the whole scan. Diagnostics quote control characters and omit stack traces. Error wording may include platform-specific filesystem details; depend on exit codes, not exact error text.
+Unknown options and extra directories fail, including with help. JSON uses zero-based component indices; readable output uses one-based numbers. Both describe the same groups. For a tree containing empty `Docs` and `docs` directories, readable output is:
 
-The CLI waits for output writes to finish. Failed output writes (including broken pipes) exit 2; it attempts a diagnostic on stderr. If stderr also fails, the exit code still signals failure. An output-write failure can leave truncated stdout, so discard output on exit 2. Reports are built in memory; this is not a streaming scanner.
+```text
+Found 1 ASCII case collision group(s).
 
-## Verify the distributable
+Component 1 at "docs"
+  Variants: "Docs", "docs"
+  Reason: Distinct component spellings are equal under ASCII case-insensitive comparison.
+  Paths:
+    "Docs"
+    "docs"
+```
+
+A clean scan prints `No ASCII case collisions found.` Names are quoted and control characters escaped.
+
+| Exit code | Meaning |
+| --- | --- |
+| 0 | Clean scan or help |
+| 1 | Collisions found; a complete report is available |
+| 2 | Invalid arguments, scan failure or output-write failure |
+
+Reports/help go to stdout; diagnostics go to stderr. Help remains readable with `--json`. Failed scans emit no partial JSON. A failed output write can leave truncated stdout, so discard it on exit 2. The CLI waits for writes to finish; broken pipes also return 2, even when stderr cannot accept a diagnostic. Error wording can vary by platform; depend on exit codes rather than full prose.
+
+## CI and import pipelines
+
+Once the local tarball is installed as a development dependency, add this script to your consumer package.json:
+
+```json
+{
+  "scripts": {
+    "check:paths": "pathcase-audit ."
+  }
+}
+```
+
+Run `npm run check:paths` as a CI step. Any collision or scan failure fails the step. Prefer a case-sensitive CI filesystem: a scan cannot recover names already overwritten or rejected by a case-insensitive disk. Use `checkPaths` for proposed destinations regardless of host filesystem.
+
+In an importer, check `manifest.map(entry => entry.destination)` before any writes, and stop when `hasCollisions` is true. The runnable `npm run example:import` demonstrates this using [a sample manifest](examples/import-manifest.json); it intentionally exits 1 and creates no files. `npm run example` shows the basic API. Importers must separately validate duplicate destinations and other destination restrictions.
+
+## Limitations
+
+- ASCII case only: no Unicode case folding or normalization, reserved-name checks, path-length checks or complete operating-system compatibility.
+- Exact duplicate destinations and structural conflicts such as `file` versus `file/child` are outside scope.
+- The scanner reports only existing entries. It does not check JavaScript import statement casing or rename files.
+- On-disk names must be representable by the path grammar. Invalid UTF-8 bytes and literal POSIX backslashes reject the scan.
+- Scans require a stable tree. Concurrent replacement can affect traversal; this is not an atomic snapshot or a security boundary.
+- Paths and reports are held in memory. There is no streaming or fixed-memory guarantee.
+
+## Development and verification
 
 ```sh
+npm ci
+npm run check
+npm run check:source
+npm test
+npm run test:types
 npm run check:package
 npm run check:install
 ```
 
-The first command checks `npm pack --dry-run` for required files and unwanted development files. The second creates a real tarball, installs it offline into a temporary consumer project, and checks the public API, directory scanner, blocked internal imports, installed CLI help/JSON/error exits and TypeScript declarations. It removes its temporary project afterward. Run `npm ci` first to install the development TypeScript compiler. Neither command publishes to npm.
+The 76 runtime tests cover comparison, validation, generated reference cases, scanner behavior, errors, CLI output and exit codes. Filesystem-dependent tests explicitly skip unsupported capabilities. Source checks use JSDoc; consumer type checks use NodeNext and Bundler resolution.
 
-The npm package includes `src`, `bin`, `docs`, `examples`, README, license and package metadata. Tests, CI configuration, development plans and scripts stay in GitHub. Fresh tarball installation is verified; registry publication remains pending.
+`check:package` checks `npm pack --dry-run` contents. `check:install` creates a real tarball, installs it offline in a temporary project, verifies API/scanner/export boundaries, installed CLI and declarations, then removes the temporary project. Neither publishes. The tarball contains runtime source, CLI, docs, examples, README, license and metadata; development files remain in GitHub.
+
+[GitHub Actions](https://github.com/divytandon511-stack/pathcase-audit/actions) runs these checks on Node 22/24 across Linux, macOS and Windows. The workflow has read-only permissions and does not publish packages.
+
+## Contributing and license
+
+Read the comparison contract, add a focused regression test for behavior changes, and run the checks above before opening a pull request. Keep implemented behavior distinct from future plans. The [development log](https://github.com/divytandon511-stack/pathcase-audit/blob/main/DEVELOPMENT-PLAN.md) records actual progress. Licensed under [MIT](LICENSE).
