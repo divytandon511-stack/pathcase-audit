@@ -14,7 +14,8 @@
     "example:import": "node examples/check-import.js",
     "test:types": "tsc -p type-tests/tsconfig.json && tsc -p type-tests/tsconfig.json --module ESNext --moduleResolution Bundler",
     "check:source": "tsc -p jsconfig.json",
-    "check:package": "node scripts/check-package.js"
+    "check:package": "node scripts/check-package.js",
+    "check:install": "node scripts/check-install.js"
   },
   "repository": {
     "type": "git",

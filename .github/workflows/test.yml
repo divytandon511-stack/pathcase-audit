@@ -26,3 +26,4 @@ jobs:
       - run: npm test
       - run: npm run test:types
       - run: npm run check:package
+      - run: npm run check:install

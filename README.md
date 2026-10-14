@@ -102,3 +102,14 @@ Readable reports show each folded collision key, a one-based component number, t
 For shell/CI callers, check the exit status before parsing stdout. Exit 1 still carries a complete collision report; exit 2 carries only a diagnostic on stderr. Unreadable subtrees, file or symlink roots, and unrepresentable names fail the whole scan. Diagnostics quote control characters and omit stack traces. Error wording may include platform-specific filesystem details; depend on exit codes, not exact error text.
 
 The CLI waits for output writes to finish. Failed output writes (including broken pipes) exit 2; it attempts a diagnostic on stderr. If stderr also fails, the exit code still signals failure. An output-write failure can leave truncated stdout, so discard output on exit 2. Reports are built in memory; this is not a streaming scanner.
+
+## Verify the distributable
+
+```sh
+npm run check:package
+npm run check:install
+```
+
+The first command checks `npm pack --dry-run` for required files and unwanted development files. The second creates a real tarball, installs it offline into a temporary consumer project, and checks the public API, directory scanner, blocked internal imports, installed CLI help/JSON/error exits and TypeScript declarations. It removes its temporary project afterward. Run `npm ci` first to install the development TypeScript compiler. Neither command publishes to npm.
+
+The npm package includes `src`, `bin`, `docs`, `examples`, README, license and package metadata. Tests, CI configuration, development plans and scripts stay in GitHub. Fresh tarball installation is verified; registry publication remains pending.
