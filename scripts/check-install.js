@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -43,6 +43,36 @@ try {
     assert.equal(result.error, undefined);
     assert.equal(result.status, status, result.stderr);
     assert.match(status === 2 ? result.stderr : result.stdout, pattern);
+  }
+  // Exercise collisions through the installed npm command, not the checkout bin.
+  const tree = join(consumer, 'tree');
+  mkdirSync(tree);
+  mkdirSync(join(tree, 'Docs'));
+  mkdirSync(join(tree, 'docs'), { recursive: true });
+  if (readdirSync(tree).length === 2) {
+    writeFileSync(join(tree, 'Docs', 'Guide'), '');
+    writeFileSync(join(tree, 'docs', 'guide'), '');
+    const result = spawnSync(process.execPath, [npm, 'exec', '--offline', '--', 'pathcase-audit', 'tree', '--json'], {
+      cwd: consumer, encoding: 'utf8', timeout: 15000,
+    });
+    assert.equal(result.error, undefined);
+    assert.equal(result.status, 1, result.stderr);
+    assert.equal(result.stderr, '');
+    const report = JSON.parse(result.stdout);
+    assert.equal(report.hasCollisions, true);
+    assert.deepEqual(report.collisions.map(({ key }) => key), ['docs', 'docs/guide']);
+    assert.deepEqual(report.collisions[1].paths, ['Docs/Guide', 'docs/guide']);
+  } else {
+    console.log('Installed CLI collision fixture skipped: filesystem cannot store case variants.');
+  }
+  for (const [example, status] of [['proposed-paths.js', 0], ['check-import.js', 1]]) {
+    const result = spawnSync(process.execPath, [join(consumer, 'node_modules/pathcase-audit/examples', example)], {
+      cwd: consumer, encoding: 'utf8', timeout: 15000,
+    });
+    assert.equal(result.error, undefined);
+    assert.equal(result.status, status, result.stderr);
+    assert.equal(result.stderr, '');
+    assert.equal(JSON.parse(result.stdout).hasCollisions, true);
   }
   writeFileSync(join(consumer, 'verify.ts'), `
     import { checkPaths, scanDirectory, type CheckResult } from 'pathcase-audit';
