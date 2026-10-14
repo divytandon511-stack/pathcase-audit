@@ -3,7 +3,7 @@
 Deadline: 18 November 2026 (Asia/Kolkata).
 Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusive, via heartbeat build-pathcase-audit-daily. Target 6–7 substantive commits per day, normally two per session; no empty or artificial commits. Assignment deadline remains 18 November.
 
-## Current state — 13 October
+## Current state — 14 October
 
 The proposed-path API, validated scanner with configurable ignores, declarations, examples and cross-platform CI are implemented. The initial CLI supports help, readable/JSON reports, ignore options and exit codes. There are 76 runtime tests, including capability-aware filesystem and process tests. Distributable verification, final documentation and publication remain pending. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
@@ -100,3 +100,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 13 October, evening: fixed asynchronous output failures escaping the CLI error boundary. Output writes are now awaited; broken stdout and failed stderr return 2 without an uncaught stream error. Added delayed-write and failing-stream tests. Host: 67 passed, seven capability skips; source checks passed.
 
 - 13 October, evening: verified a real read-only stdout descriptor exits 2 without a stack trace, and complete readable/JSON reports exceeding 64 KiB survive redirected output for a 600-file case collision fixture. Host: 68 passed, eight capability skips; case-sensitive HFSX: 75 passed, one encoding skip. Source, types and syntax checks passed. Documented possible truncated output on write failure and in-memory reports. Six substantive commits completed today; next work is day 6 packaging, consumer installation and documentation.
+
+- 14 October, morning: added an explicit npm files allowlist for source, CLI, docs and examples, plus a repeatable dry-run check for required entry points, executable mode and unwanted files. npm pack reports 17 files and 37,100 unpacked bytes. Added this packaging check to CI; fresh tarball installation is the next task. The development package remains private pending release verification.

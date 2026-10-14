@@ -25,3 +25,4 @@ jobs:
       - run: npm run check:source
       - run: npm test
       - run: npm run test:types
+      - run: npm run check:package

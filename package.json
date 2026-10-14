@@ -13,7 +13,8 @@
     "example": "node examples/proposed-paths.js",
     "example:import": "node examples/check-import.js",
     "test:types": "tsc -p type-tests/tsconfig.json && tsc -p type-tests/tsconfig.json --module ESNext --moduleResolution Bundler",
-    "check:source": "tsc -p jsconfig.json"
+    "check:source": "tsc -p jsconfig.json",
+    "check:package": "node scripts/check-package.js"
   },
   "repository": {
     "type": "git",
@@ -35,5 +36,11 @@
   },
   "bin": {
     "pathcase-audit": "./bin/pathcase-audit.js"
-  }
+  },
+  "files": [
+    "src/",
+    "bin/",
+    "docs/",
+    "examples/"
+  ]
 }
