@@ -17,7 +17,7 @@ Purpose: detect ASCII case collisions in every component of proposed relative pa
 | 7. README documentation | Complete | Purpose, API, scanner, CLI, examples, limits and development |
 | 8. Usage examples | Complete | README and two executable examples shipped in the tarball |
 | 9. Installation instructions | Complete for local package | Clone and tarball installation verified; registry installation pending publication |
-| 10. Published npm package | **Not complete** | Login confirmed; npm publish rejected with E403 requiring 2FA or an authorized publishing token |
+| 10. Published npm package | **Not complete** | Interactive authentication completed; npm accepted 0.1.0, registry availability and installation verification pending |
 
 The assignment is **not fully complete** until npm publication and installation of the published version are verified.
 
@@ -67,7 +67,7 @@ The corrected-history commit `5f4d6a3` passed all six Node 22/24 Linux/macOS/Win
 
 ## Remaining release work
 
-1. Complete npm publishing authentication: the attempted publish returned E403 requiring two-factor authentication or a granular token authorized to bypass 2FA. Never send tokens or passwords in chat. `npm whoami` now confirms divytandon18; the earlier authentication blocker is resolved.
+1. Publishing authentication is complete and npm accepted the 0.1.0 upload. Wait for registry processing and verify the live version. Never send tokens or passwords in chat. `npm whoami` now confirms divytandon18; the earlier authentication blocker is resolved.
 2. Recheck name ownership/availability. The registry lookup returned E404 on 15 October; that does not guarantee publishing permission.
 3. Prepare 0.1.0 metadata and release notes, rerun verification, and inspect the exact final tarball.
 4. Publish with authorized credentials, verify registry metadata and install the published exact version in a fresh consumer.
