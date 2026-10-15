@@ -15,7 +15,9 @@
     "test:types": "tsc -p type-tests/tsconfig.json && tsc -p type-tests/tsconfig.json --module ESNext --moduleResolution Bundler",
     "check:source": "tsc -p jsconfig.json",
     "check:package": "node scripts/check-package.js",
-    "check:install": "node scripts/check-install.js"
+    "check:install": "node scripts/check-install.js",
+    "verify": "npm run check && npm run check:source && npm test && npm run test:types && npm run check:package && npm run check:install",
+    "prepublishOnly": "npm run verify"
   },
   "repository": {
     "type": "git",

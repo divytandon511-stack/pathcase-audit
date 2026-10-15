@@ -3,7 +3,7 @@
 Deadline: 18 November 2026 (Asia/Kolkata).
 Sessions: 10:00 AM, 3:00 PM and 8:00 PM India time, 9–15 October 2026 inclusive, via heartbeat build-pathcase-audit-daily. Target 6–7 substantive commits per day, normally two per session; no empty or artificial commits. Assignment deadline remains 18 November.
 
-## Current state — 14 October
+## Current state — 15 October
 
 The proposed-path API, validated scanner with configurable ignores, declarations, examples and cross-platform CI are implemented. The initial CLI supports help, readable/JSON reports, ignore options and exit codes. There are 76 runtime tests, including capability-aware filesystem and process tests. Package contents and fresh tarball installation are verified locally; final documentation and publication remain pending. No completed prototype implementation has been copied into this repository.
 The previous completed prototype is retained in ../pathcase-audit as a backup/reference.
@@ -112,3 +112,5 @@ GitHub commits/pushes and eventual publication are authorized. Remote operations
 - 14 October, evening: expanded fresh-install verification to execute both packaged examples from the consumer working directory and exercise nested collision reports/exit 1 through the installed npm command. Host installation passed with an explicit case-variant skip; case-sensitive HFSX installation passed including collisions. Afternoon CI has five successful jobs and one queued macOS Node 24 job; no failure is reported.
 
 - 14 October, evening: added packed-documentation link validation to the packaging check, so a link to a repository-only or absent file fails before publication. A temporary missing-link probe was rejected and removed; the real 20-file package and consumer checks passed. Six substantive commits completed today. Tomorrow: final rubric/release audit, credentials check and publication only when verified access permits.
+
+- 15 October, morning: confirmed corrected author email remains configured and the rewritten HEAD passed all six CI jobs. Added npm run verify and a source-checkout prepublishOnly guard covering syntax, source, runtime, types, package and installation checks. Complete verification passed outside the sandbox (68 runtime passes, eight capability skips); sandbox execution alone failed when macOS blocked creating invalid-byte filenames. npm whoami returned ENEEDAUTH; registry lookup returned E404, which is not a guarantee the name can be registered. Publication is blocked on local npm authentication.
