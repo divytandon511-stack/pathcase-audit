@@ -8,7 +8,7 @@ Filename portability is an existing problem. This package focuses on ASCII case 
 
 ## Installation
 
-Requires **Node.js 22 or newer**. Version **0.1.0** is prepared and verified locally. **npm accepted the publication; registry processing and fresh registry installation are still being verified. The install command below becomes usable once npm exposes the release.** Use the local tarball instructions meanwhile.
+Requires **Node.js 22 or newer**. Version **0.1.0** is [published on npm](https://www.npmjs.com/package/pathcase-audit/v/0.1.0). Fresh registry installation, API, CLI, examples and declarations have been verified.
 
 ```sh
 npm install pathcase-audit@0.1.0

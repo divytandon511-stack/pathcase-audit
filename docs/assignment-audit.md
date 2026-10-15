@@ -1,6 +1,6 @@
 # Assignment audit — 15 October 2026
 
-Package: **pathcase-audit**, release version **0.1.0**, prepared and locally verified. This packaged audit is a pre-publication snapshot; final registry evidence is recorded in the GitHub copy after publication. Deadline: 18 November.
+Package: **pathcase-audit 0.1.0**, published and verified on 15 October 2026. [npm release](https://www.npmjs.com/package/pathcase-audit/v/0.1.0). Deadline: 18 November. The immutable tarball contains the pre-publication audit; this repository copy records the final registry evidence.
 
 Purpose: detect ASCII case collisions in every component of proposed relative paths or existing directory entries before copying or importing files.
 
@@ -16,10 +16,10 @@ Purpose: detect ASCII case collisions in every component of proposed relative pa
 | 6. Tests | Complete | 76 runtime tests plus source, consumer types, packaging and installed-consumer checks |
 | 7. README documentation | Complete | Purpose, API, scanner, CLI, examples, limits and development |
 | 8. Usage examples | Complete | README and two executable examples shipped in the tarball |
-| 9. Installation instructions | Complete for local package | Clone and tarball installation verified; registry installation pending publication |
-| 10. Published npm package | **Not complete** | Interactive authentication completed; npm accepted 0.1.0, registry availability and installation verification pending |
+| 9. Installation instructions | Complete | Clone, tarball and exact-version registry installation verified |
+| 10. Published npm package | Complete | npm 0.1.0 listing, artifact integrity and fresh registry installation verified |
 
-The assignment is **not fully complete** until npm publication and installation of the published version are verified.
+All ten minimum requirements are complete. Registry installation was verified independently of the local tarball checks.
 
 ## README documentation requirements
 
@@ -41,9 +41,9 @@ The assignment is **not fully complete** until npm publication and installation 
 | Deliverable | Evidence/status |
 | --- | --- |
 | GitHub repository | Public repository linked above |
-| Published npm package | **Pending**; do not cite an unverified npm listing |
+| Published npm package | [Verified 0.1.0 listing](https://www.npmjs.com/package/pathcase-audit/v/0.1.0) |
 | README | Included in repository and packed artifact |
-| Installation instructions | Verified local tarball flow; registry flow awaits release |
+| Installation instructions | Verified local tarball and npm registry flows |
 | Usage examples | Bundled examples run from an isolated installed consumer |
 | Test cases | Repository test directory and CI matrix |
 | Package documentation | README, [API](api.md), [contract](path-contract.md), [contributing](contributing.md), [release guide](releasing.md), [release notes](release-notes.md) |
@@ -65,10 +65,14 @@ Installed-consumer checks cover API collisions, scanner output, export boundarie
 
 The corrected-history commit `5f4d6a3` passed all six Node 22/24 Linux/macOS/Windows jobs: [verified CI run](https://github.com/divytandon511-stack/pathcase-audit/actions/runs/38583595610). Later commits require their own CI results; this audit does not claim they were already checked by that run.
 
-## Remaining release work
+## Final registry verification
 
-1. Publishing authentication is complete and npm accepted the 0.1.0 upload. Wait for registry processing and verify the live version. Never send tokens or passwords in chat. `npm whoami` now confirms divytandon18; the earlier authentication blocker is resolved.
-2. Recheck name ownership/availability. The registry lookup returned E404 on 15 October; that does not guarantee publishing permission.
-3. Prepare 0.1.0 metadata and release notes, rerun verification, and inspect the exact final tarball.
-4. Publish with authorized credentials, verify registry metadata and install the published exact version in a fresh consumer.
-5. Update this audit and README with actual verified release evidence. Scheduled work ends after 15 October; unresolved blockers must remain explicit.
+On 15 October, npm exposed version 0.1.0. Its SHA-512 integrity exactly matches the uploaded tarball:
+
+```text
+sha512-3BFDJfRyFjlyzYYXxlEeqYDNsyeTeh0epzuhAzT60jQ3tG9x5R1ATI9dJ6Xq8Dn9mlHd8RQXL6vYoL/y6xHrIQ==
+```
+
+A fresh temporary consumer installed `pathcase-audit@0.1.0` from registry.npmjs.org and passed API collision detection, clean scanning, blocked internal imports, CLI help/JSON/failure exits, both bundled examples and strict TypeScript compilation. The installed on-disk collision fixture skipped on this case-insensitive host; the earlier case-sensitive tarball test covered it. The latest pre-audit CI commit passed all six jobs: [CI run](https://github.com/divytandon511-stack/pathcase-audit/actions/runs/38689366554).
+
+There are no remaining assignment blockers. Published bytes correspond to release preparation commit `2b84d4b`; subsequent repository changes document publishing status without replacing npm's immutable artifact. No LinkedIn post was published. Limits remain those described in the README, particularly ASCII-only comparison and non-atomic in-memory scans.
