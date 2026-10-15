@@ -165,3 +165,5 @@ The 76 runtime tests cover comparison, validation, generated reference cases, sc
 Read the [contribution guide](docs/contributing.md) and comparison contract, add a focused regression test for behavior changes, and run the checks above before opening a pull request. Keep implemented behavior distinct from future plans. The [development log](https://github.com/divytandon511-stack/pathcase-audit/blob/main/DEVELOPMENT-PLAN.md) records actual progress. Licensed under [MIT](LICENSE).
 
 Maintainers: see the [release guide](docs/releasing.md) and [unreleased notes](docs/release-notes.md) for versioning and publication verification.
+
+See the [assignment audit](docs/assignment-audit.md) for requirement-by-requirement evidence and outstanding publication work.
