@@ -1,6 +1,6 @@
 # Release guide
 
-This is a maintainer checklist, not evidence of publication. The current development version is `0.1.0-dev.0` with `private: true`. The proposed first registry release is **0.1.0**: a usable initial API with a deliberately limited ASCII comparison scope. Pre-1.0 consumers should pin versions when depending on exact behavior. Record compatibility changes in release notes and never reuse a published version.
+This is a maintainer checklist, not evidence of publication. The first release version is **0.1.0**: a usable initial API with a deliberately limited ASCII comparison scope. Pre-1.0 consumers should pin versions when depending on exact behavior. Record compatibility changes in release notes and never reuse a published version.
 
 ## Before changing release metadata
 
@@ -11,7 +11,7 @@ This is a maintainer checklist, not evidence of publication. The current develop
 
 ## Prepare and publish
 
-1. Change to the intended release version and remove `private: true` only when publication is ready. Keep package-lock metadata synchronized. Update release notes and installation instructions for the exact version being published.
+1. Set the intended release version and ensure publication is ready before removing any private-package guard. Keep package-lock metadata synchronized. Update release notes and installation instructions for the exact version being published.
 2. Rerun packaging and consumer checks after metadata changes. Inspect `npm pack --dry-run --json`, then create the final tarball with `npm pack`. Verify its file list, version and contents before publishing that tarball.
 3. Publish through authorized npm credentials. If npm requests interactive authentication or access is missing, report the blocker; never claim publication from a successful pack alone.
 4. Verify the live registry version, integrity metadata and package listing. Install the published exact version in a fresh consumer and exercise the documented API and CLI again. Local tarball installation does not substitute for this registry check.

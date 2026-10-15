@@ -1,6 +1,6 @@
 # Assignment audit — 15 October 2026
 
-Package: **pathcase-audit**, development version **0.1.0-dev.0**. Proposed first npm release: **0.1.0**, pending authentication and final registry verification. Deadline: 18 November.
+Package: **pathcase-audit**, release version **0.1.0**, prepared and locally verified. This packaged audit is a pre-publication snapshot; final registry evidence is recorded in the GitHub copy after publication. Deadline: 18 November.
 
 Purpose: detect ASCII case collisions in every component of proposed relative paths or existing directory entries before copying or importing files.
 
@@ -11,13 +11,13 @@ Purpose: detect ASCII case collisions in every component of proposed relative pa
 | 1. Clearly defined purpose | Complete | README problem statement and scope |
 | 2. Proper project structure | Complete | src, bin, test, docs, examples, scripts in the public repository |
 | 3. Public GitHub repository | Complete | [pathcase-audit](https://github.com/divytandon511-stack/pathcase-audit) |
-| 4. Appropriate package.json | Implemented; release metadata pending | ESM exports, types, bin, files, Node >=22, MIT, repository, scripts; private development version retained |
+| 4. Appropriate package.json | Complete | ESM exports, types, bin, files, Node >=22, MIT, repository, scripts; 0.1.0 release metadata prepared |
 | 5. Source code | Complete | checkPaths, scanDirectory and CLI implementations |
 | 6. Tests | Complete | 76 runtime tests plus source, consumer types, packaging and installed-consumer checks |
 | 7. README documentation | Complete | Purpose, API, scanner, CLI, examples, limits and development |
 | 8. Usage examples | Complete | README and two executable examples shipped in the tarball |
 | 9. Installation instructions | Complete for local package | Clone and tarball installation verified; registry installation pending publication |
-| 10. Published npm package | **Not complete** | npm authentication unavailable; no live release verified |
+| 10. Published npm package | **Not complete** | Local authentication confirmed as divytandon18; live release verification pending |
 
 The assignment is **not fully complete** until npm publication and installation of the published version are verified.
 
@@ -55,7 +55,7 @@ The assignment is **not fully complete** until npm publication and installation 
 - Validation covers relative path grammar, both separators, duplicates, sparse arrays and invalid types. Scans include empty directories and symlink names without intentional traversal, use exact directory ignores and propagate read failures.
 - CLI help, clean/collision/failure exits, JSON parity, control-character escaping, output failures and reports over 64 KiB are tested.
 - Runtime has no external dependencies. JavaScript source and published declarations are checked; unsupported internal imports are blocked by exports.
-- Versioning rationale and release checks are documented. The package is intentionally still private until publication readiness is confirmed.
+- Versioning rationale and release checks are documented. The release metadata is prepared after successful local verification.
 
 ## Verification actually performed
 
@@ -67,7 +67,7 @@ The corrected-history commit `5f4d6a3` passed all six Node 22/24 Linux/macOS/Win
 
 ## Remaining release work
 
-1. Authenticate locally with npm using its normal login flow. Never send tokens or passwords in chat. `npm whoami` currently returns ENEEDAUTH.
+1. Authenticate locally with npm using its normal login flow. Never send tokens or passwords in chat. `npm whoami` now confirms divytandon18; the earlier authentication blocker is resolved.
 2. Recheck name ownership/availability. The registry lookup returned E404 on 15 October; that does not guarantee publishing permission.
 3. Prepare 0.1.0 metadata and release notes, rerun verification, and inspect the exact final tarball.
 4. Publish with authorized credentials, verify registry metadata and install the published exact version in a fresh consumer.

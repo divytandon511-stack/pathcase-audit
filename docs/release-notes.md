@@ -1,8 +1,8 @@
 # Release notes
 
-## Unreleased — planned 0.1.0
+## 0.1.0 — 15 October 2026
 
-No npm release is claimed here. Current development version: `0.1.0-dev.0`.
+Initial release. Registry publication verification is recorded in the assignment audit.
 
 - `checkPaths` checks proposed relative paths without disk access, grouping ASCII case collisions at every component.
 - `scanDirectory` checks existing files, directories and symlink names with exact configurable directory ignores and explicit read failures.

@@ -1,6 +1,6 @@
 # API reference
 
-Available in the current development checkout. TypeScript declarations are included. The directory scanner and CLI are available; npm publication remains pending.
+API reference for 0.1.0. TypeScript declarations, the directory scanner and CLI are included.
 
 ## checkPaths(paths)
 

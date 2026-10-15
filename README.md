@@ -6,9 +6,14 @@ Detect ASCII case collisions in proposed paths and existing directory trees, wit
 
 Filename portability is an existing problem. This package focuses on ASCII case collisions; it does not certify full Windows, macOS or Unicode compatibility.
 
-## Status and installation
+## Installation
 
-Requires **Node.js 22 or newer**. The current version is **0.1.0-dev.0**, marked private while release verification is in progress. **This rebuild has not been published to npm.** The API, CLI and fresh tarball installation have been tested; registry publication remains pending.
+Requires **Node.js 22 or newer**. Version **0.1.0** is the first release of this focused ASCII-case API.
+
+```sh
+npm install pathcase-audit@0.1.0
+npx --offline pathcase-audit --help
+```
 
 To use the development checkout:
 
@@ -22,11 +27,11 @@ node bin/pathcase-audit.js --help
 To install this version into another project, run `npm pack` in the checkout, then install the resulting local tarball from your consumer project:
 
 ```sh
-npm install /absolute/path/to/pathcase-audit-0.1.0-dev.0.tgz
+npm install /absolute/path/to/pathcase-audit-0.1.0.tgz
 npx --offline pathcase-audit --help
 ```
 
-Replace the absolute path with the actual tarball location. This uses the locally built package, not a registry release. The examples below use ESM (`.mjs`, or `"type": "module"` in your package.json). TypeScript declarations are included.
+Replace the absolute path with the actual tarball location. This alternative installs your locally built package. The examples below use ESM (`.mjs`, or `"type": "module"` in your package.json). TypeScript declarations are included.
 
 ## Check proposed paths
 
